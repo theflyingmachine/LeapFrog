@@ -9,6 +9,13 @@
     tools:context="com.ericabraham.leapfrog.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <ListView
+        android:layout_width="374dp"
+        android:layout_height="517dp"
+        android:id="@+id/listView"
+        tools:layout_editor_absoluteY="5dp"
+        tools:layout_editor_absoluteX="9dp" />
+
     <TextView
         android:id="@+id/placeDetails"
         android:layout_width="wrap_content"
@@ -17,6 +24,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.27"
+        app:layout_constraintVertical_bias="0.967" />
 
 </android.support.constraint.ConstraintLayout>

@@ -7,8 +7,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -24,6 +28,32 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
+
+    private ListView listView;
+
+
+
+
+    private String names[];
+//            = {
+//            "HTML",
+//            "CSS",
+//            "Java Script",
+//            "Wordpress",
+//            "Android Studio"
+//    };
+
+    private String desc[];
+//            = {
+//            "The Powerful Hypter Text Markup Language 5",
+//            "Cascading Style Sheets",
+//            "Code with Java Script",
+//            "Manage your content with Wordpress",
+//            "Build your own android apps"
+//
+//    };
+
+
     private GoogleApiClient mGoogleApiClient;
     private int PLACE_PICKER_REQUEST = 1;
     private TextView tvPlaceDetails;
@@ -33,6 +63,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        locationDatabase db = new locationDatabase(this);
+        String[] lat;
+        String[] longi;
+        String[] task;
+        lat = db.displayLat();
+        longi = db.displayLong();
+        task = db.displayTask();
+
+
+
+        CustomList customList = new CustomList(this, lat,longi,task);
+        listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(customList);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getApplicationContext(),"Ahhh... dont touch me now!! ",Toast.LENGTH_SHORT).show();
+            }
+        });
 
         initViews();
 
@@ -83,6 +134,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        locationDatabase db = new locationDatabase(this);
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
@@ -91,20 +144,55 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 String latitude = String.valueOf(place.getLatLng().latitude);
                 String longitude = String.valueOf(place.getLatLng().longitude);
                 String address = String.format("%s", place.getAddress());
-                stBuilder.append("Name: ");
-                stBuilder.append(placename);
-                stBuilder.append("\n");
-                stBuilder.append("Latitude: ");
-                stBuilder.append(latitude);
-                stBuilder.append("\n");
+//                stBuilder.append("Name: ");
+//                stBuilder.append(placename);
+//                stBuilder.append("\n");
+//                stBuilder.append("Latitude: ");
+  //              stBuilder.append(latitude);
+//                stBuilder.append("\n");
+
+//                stBuilder.append("\n");
+//                stBuilder.append("Address: ");
+//                stBuilder.append(address);
+//               tvPlaceDetails.setText(stBuilder.toString());
+                db.insertLocation(latitude,longitude);
+
+                String[] reminderdata;
+
+                reminderdata = db.displayLocation();
+
                 stBuilder.append("Logitude: ");
-                stBuilder.append(longitude);
+                stBuilder.append(reminderdata[0]);
                 stBuilder.append("\n");
-                stBuilder.append("Address: ");
-                stBuilder.append(address);
+
+                stBuilder.append("Logitude: ");
+                stBuilder.append(reminderdata[1]);
+                stBuilder.append("\n");
+
+                stBuilder.append("Task: ");
+                stBuilder.append(reminderdata[2]);
+                stBuilder.append("\n");
+
                 tvPlaceDetails.setText(stBuilder.toString());
             }
         }
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }
