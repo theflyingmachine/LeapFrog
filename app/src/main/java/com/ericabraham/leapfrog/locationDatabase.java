@@ -3,6 +3,7 @@ package com.ericabraham.leapfrog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -11,6 +12,8 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class locationDatabase extends SQLiteOpenHelper {
+
+    int rowCount=0;
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "leapfrog";
     public static final String TABLE_NAME = "reminder";
@@ -68,7 +71,7 @@ public class locationDatabase extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        String[] reminderdata = new String[1000];
+        String[] reminderdata = new String[100];
         int i=0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -89,7 +92,7 @@ public class locationDatabase extends SQLiteOpenHelper {
         String selectQuery = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        String[] lat = new String[500];
+        String[] lat = new String[rowCount];
         int i=0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -106,7 +109,7 @@ public class locationDatabase extends SQLiteOpenHelper {
         String selectQuery = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        String[] longi = new String[500];
+        String[] longi = new String[rowCount];
         int i=0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -124,7 +127,7 @@ public class locationDatabase extends SQLiteOpenHelper {
         String selectQuery = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        String[] task = new String[500];
+        String[] task = new String[rowCount];
         int i=0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -137,16 +140,16 @@ public class locationDatabase extends SQLiteOpenHelper {
     }
 
 
-    public String[] displayId() {
+    public int[] displayId() {
         String selectQuery = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        String[] id = new String[500];
+        int[] id = new int[rowCount];
         int i=0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                id[i]=cursor.getString(0);
+                id[i]=Integer.parseInt(cursor.getString(0));
                 i++;
             } while (cursor.moveToNext());
         }
@@ -158,7 +161,7 @@ public class locationDatabase extends SQLiteOpenHelper {
         String selectQuery = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        String[] todo = new String[500];
+        String[] todo = new String[rowCount];
         int i=0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -169,5 +172,65 @@ public class locationDatabase extends SQLiteOpenHelper {
         }
         return todo;
     }
+
+//get radius
+    public int displayRadius(int i) {
+        String selectQuery = "SELECT "+COLUMN_NAME_RADIUS +" FROM " + TABLE_NAME +" WHERE " + COLUMN_NAME_ID + " = " +i;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        int rad = 0;
+        if (cursor.moveToFirst()) {
+            rad = cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_RADIUS));
+        }
+        cursor.close();
+
+        return rad;
+    }
+
+
+//get individual result to manage task
+    public String[] displayTask(int i) {
+        String selectQuery = "SELECT * FROM " + TABLE_NAME +" WHERE " +COLUMN_NAME_ID +" = " +i;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        String[] myTask = new String[10];
+        if (cursor.moveToFirst()) {
+            myTask[0] = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_TASK));
+            myTask[1] = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_DATE));
+            myTask[2] = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_TODO));
+            myTask[3] = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_ID));
+        }
+        cursor.close();
+        return myTask;
+    }
+
+
+    //To delete a Task entry
+    public void delTask(int i) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_NAME_ID + " = " + i);
+    }
+
+
+    //To update the databse
+    public void updateTask(int id, String task, String todo, Integer radius, String date){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("UPDATE " + TABLE_NAME + " SET "
+                +COLUMN_NAME_TASK + " = '" + task +"', "
+                +COLUMN_NAME_TODO + " = '" + todo +"', "
+                +COLUMN_NAME_RADIUS + " = " + radius +", "
+                +COLUMN_NAME_DATE + " = '" + date +"' "
+                +" WHERE " +COLUMN_NAME_ID + " = " + id + ";");
+    }
+
+
+    //To delete a Task entry
+    public void getCount() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long numRows = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
+        rowCount = (int)numRows;
+    }
+
 }
 

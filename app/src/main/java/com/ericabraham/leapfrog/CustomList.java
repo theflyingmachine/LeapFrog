@@ -18,15 +18,17 @@ public class CustomList extends ArrayAdapter<String> {
     private String[] lat;
     private String[] longi;
     private String[] task;
+    private int[] id;
 
     private Activity context;
 
-    public CustomList(Activity context, String[] lat, String[] longi, String[] task) {
+    public CustomList(Activity context, String[] lat, String[] longi, String[] task, int[] id) {
         super(context, R.layout.list_layout, lat);
         this.context = context;
         this.lat = lat;
         this.longi = longi;
         this.task = task;
+        this.id = id;
 
     }
 

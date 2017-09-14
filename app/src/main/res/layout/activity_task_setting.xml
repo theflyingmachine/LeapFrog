@@ -89,7 +89,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:max="10"
-                android:progress="3" />
+                android:progress="3"
+                android:thumb="@mipmap/ic_launcher" />
 
             <TextView
                 android:id="@+id/datetitle"
@@ -141,7 +142,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="190dp"
+            android:layout_height="103dp"
             android:padding="15dp">
 
             <LinearLayout

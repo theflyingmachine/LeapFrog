@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -177,22 +176,37 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         startActivity(intent);
     }
 
+    private void manageTask(int i) {
+        //Toast.makeText(getApplicationContext(),"Ahhh... I'm CALLED!! ",Toast.LENGTH_SHORT).show();
+        // EditText txtname = (EditText)findViewById(R.id.editText);
+        //  String dataToPass      =  txtname.getText().toString();
+        Intent intent = new Intent(this, ManageTask.class);
+       // Toast.makeText(getApplicationContext(),"Ahhh... dont touch me now!! " +i , Toast.LENGTH_SHORT).show();
+        String idName = String.valueOf(i);
+        intent.putExtra("idName", idName);
+        startActivity(intent);
+    }
+
+
 
 
     private void displayData(){
         locationDatabase db = new locationDatabase(this);
+        db.getCount();
         String[] lat;
         String[] longi;
         String[] task;
+        final int[] id;
         final String[] todo;
         lat = db.displayLat();
         longi = db.displayLong();
         task = db.displayTask();
         todo = db.displayTodo();
+        id = db.displayId();
 
 
 
-        CustomList customList = new CustomList(this, lat,longi,task);
+        CustomList customList = new CustomList(this, lat,longi,task,id);
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(customList);
 
@@ -200,7 +214,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Toast.makeText(getApplicationContext(),"Ahhh... dont touch me now!! " +todo[i] ,Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(),"Ahhh... dont touch me now!! " +id[i] , Toast.LENGTH_SHORT).show();
+                manageTask(id[i]);
 
             }
         });
