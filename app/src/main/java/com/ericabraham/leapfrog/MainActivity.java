@@ -31,29 +31,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private ListView listView;
 
-
-
-
-    private String names[];
-//            = {
-//            "HTML",
-//            "CSS",
-//            "Java Script",
-//            "Wordpress",
-//            "Android Studio"
-//    };
-
-    private String desc[];
-//            = {
-//            "The Powerful Hypter Text Markup Language 5",
-//            "Cascading Style Sheets",
-//            "Code with Java Script",
-//            "Manage your content with Wordpress",
-//            "Build your own android apps"
-//
-//    };
-
-
     private GoogleApiClient mGoogleApiClient;
     private int PLACE_PICKER_REQUEST = 1;
     private TextView tvPlaceDetails;
@@ -63,29 +40,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        displayData();
+        displayData();
 
-        locationDatabase db = new locationDatabase(this);
-        String[] lat;
-        String[] longi;
-        String[] task;
-        lat = db.displayLat();
-        longi = db.displayLong();
-        task = db.displayTask();
-
-
-
-        CustomList customList = new CustomList(this, lat,longi,task);
-        listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(customList);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getApplicationContext(),"Ahhh... dont touch me now!! ",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        initViews();
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -108,6 +65,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         });
     }
 
+
+
+
+
     private void initViews() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -126,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         mGoogleApiClient.disconnect();
         super.onStop();
     }
+
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -155,25 +118,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 //                stBuilder.append("Address: ");
 //                stBuilder.append(address);
 //               tvPlaceDetails.setText(stBuilder.toString());
-                db.insertLocation(latitude,longitude);
+
+                taskSetting(latitude,longitude);
+
+
+//                Toast.makeText(getApplicationContext(),"Ahhh... I'm CALLED!! ",Toast.LENGTH_SHORT).show();
+
+//                db.insertLocation(latitude,longitude);
 
                 String[] reminderdata;
 
                 reminderdata = db.displayLocation();
 
-                stBuilder.append("Logitude: ");
-                stBuilder.append(reminderdata[0]);
-                stBuilder.append("\n");
 
-                stBuilder.append("Logitude: ");
-                stBuilder.append(reminderdata[1]);
-                stBuilder.append("\n");
+//                stBuilder.append("Logitude: ");
+//                stBuilder.append(reminderdata[0]);
+//                stBuilder.append("\n");
+//
+//                stBuilder.append("Logitude: ");
+//                stBuilder.append(reminderdata[1]);
+//                stBuilder.append("\n");
+//
+//                stBuilder.append("Task: ");
+//                stBuilder.append(reminderdata[2]);
+//                stBuilder.append("\n");
 
-                stBuilder.append("Task: ");
-                stBuilder.append(reminderdata[2]);
-                stBuilder.append("\n");
+//                tvPlaceDetails.setText(stBuilder.toString());
 
-                tvPlaceDetails.setText(stBuilder.toString());
+
             }
         }
     }
@@ -193,6 +165,48 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void taskSetting(String lat, String longi) {
+        //Toast.makeText(getApplicationContext(),"Ahhh... I'm CALLED!! ",Toast.LENGTH_SHORT).show();
+        // EditText txtname = (EditText)findViewById(R.id.editText);
+        //  String dataToPass      =  txtname.getText().toString();
+        Intent intent = new Intent(this, task_setting.class);
+        intent.putExtra("lat", lat);
+        intent.putExtra("longi", longi);
+        startActivity(intent);
+    }
+
+
+
+    private void displayData(){
+        locationDatabase db = new locationDatabase(this);
+        String[] lat;
+        String[] longi;
+        String[] task;
+        final String[] todo;
+        lat = db.displayLat();
+        longi = db.displayLong();
+        task = db.displayTask();
+        todo = db.displayTodo();
+
+
+
+        CustomList customList = new CustomList(this, lat,longi,task);
+        listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(customList);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Toast.makeText(getApplicationContext(),"Ahhh... dont touch me now!! " +todo[i] ,Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        initViews();
+
     }
 
 }
