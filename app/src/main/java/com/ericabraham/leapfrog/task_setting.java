@@ -109,6 +109,14 @@ public class task_setting extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
+    }
+
     public boolean saveOkStatus(){
         Toast.makeText(getApplicationContext(),"Ahhh... Saved!! ",Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);

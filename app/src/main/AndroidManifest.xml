@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".Splash"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -29,7 +29,8 @@
             android:value="AIzaSyDHVaAJ87HzWEwFA0MmThTMpZVLbQg3fN8" />
 
         <activity android:name=".task_setting" />
-        <activity android:name=".ManageTask"></activity>
+        <activity android:name=".ManageTask" />
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>
