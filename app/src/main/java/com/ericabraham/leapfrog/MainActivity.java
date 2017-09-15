@@ -149,7 +149,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -174,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         intent.putExtra("lat", lat);
         intent.putExtra("longi", longi);
         startActivity(intent);
+        this.finish();
     }
 
     private void manageTask(int i) {
@@ -185,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         String idName = String.valueOf(i);
         intent.putExtra("idName", idName);
         startActivity(intent);
+        this.finish();
     }
 
 

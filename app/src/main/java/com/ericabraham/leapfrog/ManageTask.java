@@ -121,10 +121,20 @@ public class ManageTask extends AppCompatActivity {
 
     public void returnToMain(){
         //Toast.makeText(getApplicationContext(),"Ahhh... Done..!! ",Toast.LENGTH_SHORT).show();
+        finish();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
+    }
+
 
 
 
