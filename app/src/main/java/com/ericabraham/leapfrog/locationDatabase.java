@@ -24,6 +24,8 @@ public class locationDatabase extends SQLiteOpenHelper {
     public static final String COLUMN_NAME_TODO = "todo";
     public static final String COLUMN_NAME_RADIUS = "radius";
     public static final String COLUMN_NAME_DATE = "date";
+    public static final String COLUMN_NAME_NAME = "pname";
+    public static final String COLUMN_NAME_ADDRESS = "paddress";
 
    public locationDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -38,7 +40,10 @@ public class locationDatabase extends SQLiteOpenHelper {
                 + COLUMN_NAME_TASK + " TEXT,"//index 3
                 + COLUMN_NAME_TODO + " TEXT,"//index 4
                 + COLUMN_NAME_RADIUS + " INTEGER,"//index 5
-                + COLUMN_NAME_DATE + " TEXT )";//index 6
+                + COLUMN_NAME_DATE + " TEXT,"//index 6
+                + COLUMN_NAME_NAME + " TEXT,"//index 7
+                + COLUMN_NAME_ADDRESS + " TEXT )";//index 8
+
         db.execSQL(CREATE_TABLE);
     }
 
@@ -48,7 +53,7 @@ public class locationDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertLocation(String lat, String longi, String task, String todo, Integer radius, String date){
+    public void insertLocation(String lat, String longi, String task, String todo, Integer radius, String date, String pname, String address){
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -58,6 +63,8 @@ public class locationDatabase extends SQLiteOpenHelper {
         values.put(COLUMN_NAME_TODO, todo);
         values.put(COLUMN_NAME_RADIUS, radius);
         values.put(COLUMN_NAME_DATE, date);
+        values.put(COLUMN_NAME_NAME, pname);
+        values.put(COLUMN_NAME_ADDRESS, address);
 
 
         // Inserting Row
@@ -88,41 +95,6 @@ public class locationDatabase extends SQLiteOpenHelper {
     }
 
 
-    public String[] displayLat() {
-        String selectQuery = "SELECT * FROM " + TABLE_NAME;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        String[] lat = new String[rowCount];
-        int i=0;
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                lat[i]=cursor.getString(1);
-                i++;
-            } while (cursor.moveToNext());
-        }
-        return lat;
-    }
-
-
-    public String[] displayLong() {
-        String selectQuery = "SELECT * FROM " + TABLE_NAME;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        String[] longi = new String[rowCount];
-        int i=0;
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                longi[i]=cursor.getString(2);
-                i++;
-            } while (cursor.moveToNext());
-        }
-        return longi;
-    }
-
-
-
     public String[] displayTask() {
         String selectQuery = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -138,6 +110,58 @@ public class locationDatabase extends SQLiteOpenHelper {
         }
         return task;
     }
+
+    public String[] displayName() {
+        String selectQuery = "SELECT * FROM " + TABLE_NAME;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        String[] name = new String[rowCount];
+        int i=0;
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                name[i]=cursor.getString(7);
+                i++;
+            } while (cursor.moveToNext());
+        }
+        return name;
+    }
+
+
+    public String[] displayDate() {
+        String selectQuery = "SELECT * FROM " + TABLE_NAME;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        String[] date = new String[rowCount];
+        int i=0;
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                date[i]=cursor.getString(6);
+                i++;
+            } while (cursor.moveToNext());
+        }
+        return date;
+    }
+
+
+    public String[] displayAddress() {
+        String selectQuery = "SELECT * FROM " + TABLE_NAME;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        String[] add = new String[rowCount];
+        int i=0;
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                add[i]=cursor.getString(8);
+                i++;
+            } while (cursor.moveToNext());
+        }
+        return add;
+    }
+
+
 
 
     public int[] displayId() {

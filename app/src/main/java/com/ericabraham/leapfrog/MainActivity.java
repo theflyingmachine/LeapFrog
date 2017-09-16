@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
        // setSupportActionBar(toolbar);
         fabPickPlace = (FloatingActionButton) findViewById(R.id.fab);
-        tvPlaceDetails = (TextView) findViewById(R.id.placeDetails);
+//        tvPlaceDetails = (TextView) findViewById(R.id.placeDetails);
     }
 
     @Override
@@ -117,13 +117,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 //                stBuilder.append(address);
 //               tvPlaceDetails.setText(stBuilder.toString());
 
-                taskSetting(latitude,longitude);
+                taskSetting(latitude,longitude,placename,address);
 
 
-//                Toast.makeText(getApplicationContext(),"Ahhh... I'm CALLED!! ",Toast.LENGTH_SHORT).show();
-
+//                Toast.makeText(getApplicationContext(),""+placename,Toast.LENGTH_SHORT).show();
+  //              Toast.makeText(getApplicationContext(),""+address,Toast.LENGTH_SHORT).show();
 //                db.insertLocation(latitude,longitude);
-
                 String[] reminderdata;
 
                 reminderdata = db.displayLocation();
@@ -169,13 +168,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         return super.onOptionsItemSelected(item);
     }
 
-    private void taskSetting(String lat, String longi) {
+    private void taskSetting(String lat, String longi, String pname, String address) {
         //Toast.makeText(getApplicationContext(),"Ahhh... I'm CALLED!! ",Toast.LENGTH_SHORT).show();
         // EditText txtname = (EditText)findViewById(R.id.editText);
         //  String dataToPass      =  txtname.getText().toString();
         Intent intent = new Intent(this, task_setting.class);
         intent.putExtra("lat", lat);
         intent.putExtra("longi", longi);
+        intent.putExtra("pname", pname);
+        intent.putExtra("address", address);
         startActivity(intent);
         this.finish();
     }
@@ -198,20 +199,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void displayData(){
         locationDatabase db = new locationDatabase(this);
         db.getCount();
-        String[] lat;
-        String[] longi;
         String[] task;
+        String[] pname;
+        String[] date;
+        String[] address;
         final int[] id;
         final String[] todo;
-        lat = db.displayLat();
-        longi = db.displayLong();
         task = db.displayTask();
+        pname = db.displayName();
+        date = db.displayDate();
+        address = db.displayAddress();
         todo = db.displayTodo();
         id = db.displayId();
 
 
 
-        CustomList customList = new CustomList(this, lat,longi,task,id);
+        CustomList customList = new CustomList(this, task,pname,date,address,id);
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(customList);
 

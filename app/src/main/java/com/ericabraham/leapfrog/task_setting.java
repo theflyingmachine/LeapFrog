@@ -86,6 +86,9 @@ public class task_setting extends AppCompatActivity {
                 Intent intent = getIntent();
                 String latitude = getIntent().getStringExtra("lat");
                 String longitude = getIntent().getStringExtra("longi");
+                String pname = getIntent().getStringExtra("pname");
+                String address = getIntent().getStringExtra("address");
+
 
                 EditText txtname = (EditText)findViewById(R.id.title_edittext);
                 String task      =  txtname.getText().toString();
@@ -99,7 +102,22 @@ public class task_setting extends AppCompatActivity {
                 EditText datetxt = (EditText)findViewById(R.id.date);
                 String date      =  datetxt.getText().toString();
 
-                db.insertLocation(latitude,longitude,task,todo,radius,date);
+// Validation
+                if(task.equals("")) {
+                    Toast.makeText(getApplicationContext(),"Awww... Pleas give me a TITLE.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(date.equals("")) {
+                    Toast.makeText(getApplicationContext(),"Awww... do i have a DATE?.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(todo.equals("")) {
+                    Toast.makeText(getApplicationContext(),"Awww... I can not remind NOTHING.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                db.insertLocation(latitude,longitude,task,todo,radius,date,pname,address);
                 saveOkStatus();
 
 

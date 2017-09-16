@@ -113,6 +113,25 @@ public class ManageTask extends AppCompatActivity {
                 int uradius = radius.getProgress();
                   //      Integer.parseInt(date.getText().toString());
                 String udate = date.getText().toString();
+
+// Validation
+                if(utask.equals("")) {
+                    Toast.makeText(getApplicationContext(),"Awww... Pleas give me a TITLE.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(udate.equals("")) {
+                    Toast.makeText(getApplicationContext(),"Awww... Do i have a DATE?.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(utodo.equals("")) {
+                    Toast.makeText(getApplicationContext(),"Awww... I can not remind NOTHING.",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+
+
+
                 db.updateTask(idno, utask, utodo, uradius, udate);
                 returnToMain();
             }
