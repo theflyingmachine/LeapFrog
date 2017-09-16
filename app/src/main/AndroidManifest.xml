@@ -24,13 +24,16 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDHVaAJ87HzWEwFA0MmThTMpZVLbQg3fN8" />
+        <!--<meta-data-->
+            <!--android:name="com.google.android.geo.API_KEY"-->
+            <!--android:value="AIzaSyDHVaAJ87HzWEwFA0MmThTMpZVLbQg3fN8" />-->
 
         <activity android:name=".task_setting" />
         <activity android:name=".ManageTask" />
         <activity android:name=".MainActivity"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDHVaAJ87HzWEwFA0MmThTMpZVLbQg3fN8"/>
     </application>
 
 </manifest>

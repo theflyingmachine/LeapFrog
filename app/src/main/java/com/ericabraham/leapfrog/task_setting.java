@@ -127,7 +127,9 @@ public class task_setting extends AppCompatActivity {
 
     public boolean saveNoStatus(){
         Toast.makeText(getApplicationContext(),"Ahhh... NOT SAVED!! ",Toast.LENGTH_SHORT).show();
-        finish();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
         return false;
     }
 
