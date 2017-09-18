@@ -6,11 +6,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -31,8 +32,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private GoogleApiClient mGoogleApiClient;
     private int PLACE_PICKER_REQUEST = 1;
-    private TextView tvPlaceDetails;
     private FloatingActionButton fabPickPlace;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,36 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
+    }
+
+
+    // Generating Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate( R.menu.main_menu, menu );
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch ( item.getItemId() ) {
+            case R.id.geofence: {
+             //   startGeofence();
+                return true;
+            }
+            case R.id.clear: {
+             //   clearGeofence();
+                return true;
+            }
+
+            case R.id.about: {
+                Intent intent = new Intent(this, About.class);
+                startActivity(intent);
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -153,20 +184,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         this.finish();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     private void taskSetting(String lat, String longi, String pname, String address) {
         //Toast.makeText(getApplicationContext(),"Ahhh... I'm CALLED!! ",Toast.LENGTH_SHORT).show();
@@ -229,6 +246,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         });
 
         initViews();
+
+
 
     }
 
