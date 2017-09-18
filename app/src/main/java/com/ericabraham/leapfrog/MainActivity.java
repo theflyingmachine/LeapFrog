@@ -1,5 +1,6 @@
 package com.ericabraham.leapfrog;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -99,12 +100,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch ( item.getItemId() ) {
-            case R.id.geofence: {
-             //   startGeofence();
+            case R.id.addtask: {
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    startActivityForResult(builder.build(MainActivity.this), PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
                 return true;
             }
-            case R.id.clear: {
-             //   clearGeofence();
+            case R.id.map_view: {
+                Intent intent = new Intent(this, MyMap.class);
+                this.startActivity(intent);
                 return true;
             }
 
@@ -251,4 +258,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     }
 
+
+
+    private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
+    public static Intent makeNotificationIntent(Context context, String msg) {
+        Intent intent = new Intent( context, MainActivity.class );
+        intent.putExtra( NOTIFICATION_MSG, msg );
+        return intent;
+    }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" >
-    <item android:id="@+id/geofence" android:title="Create Geofence" app:showAsAction="never" />
-    <item android:id="@+id/clear" android:title="Clear Geofence" />
+    <item android:id="@+id/addtask" android:title="New Reminder" app:showAsAction="never" />
+    <item android:id="@+id/map_view" android:title="Map View" />
     <item android:id="@+id/about" android:title="About" app:showAsAction="never" />
     <item
         android:id="@+id/myswitch"

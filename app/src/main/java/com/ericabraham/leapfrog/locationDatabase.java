@@ -95,6 +95,38 @@ public class locationDatabase extends SQLiteOpenHelper {
     }
 
 
+    public String[] displayLat() {
+        String selectQuery = "SELECT * FROM " + TABLE_NAME;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        String[] lat = new String[rowCount];
+        int i = 0;
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                lat[i] = cursor.getString(1);
+                i++;
+            } while (cursor.moveToNext());
+        }
+        return lat;
+    }
+
+        public String[] displayLong() {
+            String selectQuery = "SELECT * FROM " + TABLE_NAME;
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            String[] longi = new String[rowCount];
+            int i = 0;
+            // looping through all rows and adding to list
+            if (cursor.moveToFirst()) {
+                do {
+                    longi[i] = cursor.getString(2);
+                    i++;
+                } while (cursor.moveToNext());
+            }
+            return longi;
+        }
+
     public String[] displayTask() {
         String selectQuery = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -125,6 +157,22 @@ public class locationDatabase extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return name;
+    }
+
+    public int[] displayAllRadius() {
+        String selectQuery = "SELECT * FROM " + TABLE_NAME;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        int[] rad = new int[rowCount];
+        int i=0;
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                rad[i]=cursor.getInt(5);
+                i++;
+            } while (cursor.moveToNext());
+        }
+        return rad;
     }
 
 
