@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
        // setSupportActionBar(toolbar);
         fabPickPlace = (FloatingActionButton) findViewById(R.id.fab);
-//        tvPlaceDetails = (TextView) findViewById(R.id.placeDetails);
+       // tvPlaceDetails = (TextView) findViewById(R.id.placeDetails);
     }
 
     @Override
