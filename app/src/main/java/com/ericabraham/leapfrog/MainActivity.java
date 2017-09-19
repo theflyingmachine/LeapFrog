@@ -2,6 +2,7 @@ package com.ericabraham.leapfrog;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -30,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 
     private ListView listView;
-
+    private Switch pushBtn;
     private GoogleApiClient mGoogleApiClient;
     private int PLACE_PICKER_REQUEST = 1;
     private FloatingActionButton fabPickPlace;
@@ -40,9 +43,42 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        displayData();
-        displayData();
 
+        //Checking State for the Switch
+        pushBtn = (Switch)findViewById(R.id.pushBtn);
+        SharedPreferences sharedPrefs = getSharedPreferences("SwitchButton", MODE_PRIVATE);
+        boolean switchState = sharedPrefs.getBoolean("Switchmode", false);
+        if(switchState){
+            //Do your work for service is selected on
+            Toast.makeText(MainActivity.this, "Switch is on", Toast.LENGTH_LONG).show();
+            //pushBtn.setChecked(true);
+        } else {
+            //Code for service off
+            Toast.makeText(MainActivity.this, "Switch is on", Toast.LENGTH_LONG).show();
+//            pushBtn.setChecked(false);
+        }
+//// TODO: 19-Sep-17 add swithc hear
+//Listener for Switch
+//        pushBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(pushBtn.isChecked())
+//                {
+//                    SharedPreferences.Editor editor = getSharedPreferences("SwitchButton", MODE_PRIVATE).edit();
+//                    editor.putBoolean("Switchmode", true);
+//                    editor.commit();
+//                    Toast.makeText(MainActivity.this, "Switch is on", Toast.LENGTH_LONG).show();
+//                }
+//                else {
+//                    SharedPreferences.Editor editor = getSharedPreferences("SwitchButton", MODE_PRIVATE).edit();
+//                    editor.putBoolean("Switchmode", false);
+//                    editor.commit();
+//                    Toast.makeText(MainActivity.this, "Switch is Off", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        });
+
+        displayData();
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -64,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         });
     }
-
 
 
 
@@ -248,14 +283,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                // Toast.makeText(getApplicationContext(),"Ahhh... dont touch me now!! " +id[i] , Toast.LENGTH_SHORT).show();
                 manageTask(id[i]);
-
             }
         });
 
         initViews();
-
-
-
     }
 
 
