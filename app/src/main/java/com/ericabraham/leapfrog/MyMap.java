@@ -162,7 +162,6 @@ public class MyMap extends AppCompatActivity
 
     // App cannot work without the permissions
     private void permissionsDenied() {
-      //  Log.w(TAG, "permissionsDenied()");
         Toast.makeText(getApplicationContext(),"Leapfrog is Denied to get your current location",Toast.LENGTH_SHORT).show();
     }
 
@@ -323,7 +322,6 @@ public class MyMap extends AppCompatActivity
             LatLng latLng = new LatLng( lat, lon );
             markerForGeofence(latLng, mtask[i]);
             drawGeofence(rad[i]);
-
         }
     }
 

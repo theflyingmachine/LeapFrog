@@ -23,7 +23,7 @@ import java.util.List;
 public class GeofenceTrasitionService extends IntentService {
 
     private static final String TAG = GeofenceTrasitionService.class.getSimpleName();
-
+    String status = null;
     public static final int GEOFENCE_NOTIFICATION_ID = 0;
 
     public GeofenceTrasitionService() {
@@ -40,7 +40,7 @@ public class GeofenceTrasitionService extends IntentService {
             Log.e( TAG, errorMsg );
             return;
         }
-
+        Log.d(TAG, "Transision Service called");
         int geoFenceTransition = geofencingEvent.getGeofenceTransition();
         // Check if the transition type is of interest
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
@@ -63,12 +63,14 @@ public class GeofenceTrasitionService extends IntentService {
             triggeringGeofencesList.add( geofence.getRequestId() );
         }
 
-        String status = null;
+
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER )
-            status = "Entering ";
+            status = "entering";
+        else if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL )
+            status = "dwelling";
         else if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT )
-            status = "Exiting ";
-        return status + TextUtils.join( ", ", triggeringGeofencesList);
+            status = "exiting";
+        return TextUtils.join( ", ", triggeringGeofencesList);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -92,17 +94,16 @@ public class GeofenceTrasitionService extends IntentService {
         notificatioMng.notify(
                 GEOFENCE_NOTIFICATION_ID,
                 createNotification(msg, notificationPendingIntent));
-
     }
 
     // Create notification
     private Notification createNotification(String msg, PendingIntent notificationPendingIntent) {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
         notificationBuilder
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.frog1)
                 .setColor(Color.RED)
                 .setContentTitle(msg)
-                .setContentText("Geofence Notification!")
+                .setContentText("LeapFrog - You are " +status + " nearby!")
                 .setContentIntent(notificationPendingIntent)
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
                 .setAutoCancel(true);
