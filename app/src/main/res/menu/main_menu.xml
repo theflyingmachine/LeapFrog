@@ -4,9 +4,5 @@
     <item android:id="@+id/addtask" android:title="New Reminder" app:showAsAction="never" />
     <item android:id="@+id/map_view" android:title="Map View" />
     <item android:id="@+id/about" android:title="About" app:showAsAction="never" />
-    <item
-        android:id="@+id/myswitch"
-        android:title=""
-        app:showAsAction="always"
-        app:actionLayout="@layout/my_switch" />
+    <item android:id="@+id/myswitch" android:title="" app:showAsAction="always"  app:actionLayout="@layout/my_switch" />
 </menu>

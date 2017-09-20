@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -29,7 +30,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 * keytool -list -v -keystore "%USERPROFILE%\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
 */
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, CompoundButton.OnCheckedChangeListener {
 
 
     private ListView listView;
@@ -37,46 +38,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private GoogleApiClient mGoogleApiClient;
     private int PLACE_PICKER_REQUEST = 1;
     private FloatingActionButton fabPickPlace;
+    SharedPreferences sharedPrefs;
+    boolean switchState;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //Checking State for the Switch
-        pushBtn = (Switch)findViewById(R.id.pushBtn);
-        SharedPreferences sharedPrefs = getSharedPreferences("SwitchButton", MODE_PRIVATE);
-        boolean switchState = sharedPrefs.getBoolean("Switchmode", false);
-        if(switchState){
-            //Do your work for service is selected on
-            Toast.makeText(MainActivity.this, "Switch is on", Toast.LENGTH_LONG).show();
-            //pushBtn.setChecked(true);
-        } else {
-            //Code for service off
-            Toast.makeText(MainActivity.this, "Switch is on", Toast.LENGTH_LONG).show();
-//            pushBtn.setChecked(false);
-        }
-//// TODO: 19-Sep-17 add swithc hear
-//Listener for Switch
-//        pushBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(pushBtn.isChecked())
-//                {
-//                    SharedPreferences.Editor editor = getSharedPreferences("SwitchButton", MODE_PRIVATE).edit();
-//                    editor.putBoolean("Switchmode", true);
-//                    editor.commit();
-//                    Toast.makeText(MainActivity.this, "Switch is on", Toast.LENGTH_LONG).show();
-//                }
-//                else {
-//                    SharedPreferences.Editor editor = getSharedPreferences("SwitchButton", MODE_PRIVATE).edit();
-//                    editor.putBoolean("Switchmode", false);
-//                    editor.commit();
-//                    Toast.makeText(MainActivity.this, "Switch is Off", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
+        sharedPrefs = getSharedPreferences("SwitchButton", MODE_PRIVATE);
+        switchState = sharedPrefs.getBoolean("SwitchButton", false);
 
         displayData();
 
@@ -105,10 +76,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 
     private void initViews() {
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-       // setSupportActionBar(toolbar);
         fabPickPlace = (FloatingActionButton) findViewById(R.id.fab);
-       // tvPlaceDetails = (TextView) findViewById(R.id.placeDetails);
     }
 
     @Override
@@ -129,8 +97,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate( R.menu.main_menu, menu );
+        pushBtn = (Switch)menu.findItem(R.id.myswitch).getActionView().findViewById(R.id.pushBtn);
+        if(switchState){
+           pushBtn.setChecked(true);
+        } else {
+            pushBtn.setChecked(false);
+        }
+        pushBtn.setOnCheckedChangeListener(this);
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -178,44 +155,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 String latitude = String.valueOf(place.getLatLng().latitude);
                 String longitude = String.valueOf(place.getLatLng().longitude);
                 String address = String.format("%s", place.getAddress());
-//                stBuilder.append("Name: ");
-//                stBuilder.append(placename);
-//                stBuilder.append("\n");
-//                stBuilder.append("Latitude: ");
-  //              stBuilder.append(latitude);
-//                stBuilder.append("\n");
-
-//                stBuilder.append("\n");
-//                stBuilder.append("Address: ");
-//                stBuilder.append(address);
-//               tvPlaceDetails.setText(stBuilder.toString());
 
                 taskSetting(latitude,longitude,placename,address);
-
-
-//                Toast.makeText(getApplicationContext(),""+placename,Toast.LENGTH_SHORT).show();
-  //              Toast.makeText(getApplicationContext(),""+address,Toast.LENGTH_SHORT).show();
-//                db.insertLocation(latitude,longitude);
-                String[] reminderdata;
-
-                reminderdata = db.displayLocation();
-
-
-//                stBuilder.append("Logitude: ");
-//                stBuilder.append(reminderdata[0]);
-//                stBuilder.append("\n");
-//
-//                stBuilder.append("Logitude: ");
-//                stBuilder.append(reminderdata[1]);
-//                stBuilder.append("\n");
-//
-//                stBuilder.append("Task: ");
-//                stBuilder.append(reminderdata[2]);
-//                stBuilder.append("\n");
-
-//                tvPlaceDetails.setText(stBuilder.toString());
-
-
             }
         }
     }
@@ -228,9 +169,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 
     private void taskSetting(String lat, String longi, String pname, String address) {
-        //Toast.makeText(getApplicationContext(),"Ahhh... I'm CALLED!! ",Toast.LENGTH_SHORT).show();
-        // EditText txtname = (EditText)findViewById(R.id.editText);
-        //  String dataToPass      =  txtname.getText().toString();
         Intent intent = new Intent(this, task_setting.class);
         intent.putExtra("lat", lat);
         intent.putExtra("longi", longi);
@@ -241,11 +179,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void manageTask(int i) {
-        //Toast.makeText(getApplicationContext(),"Ahhh... I'm CALLED!! ",Toast.LENGTH_SHORT).show();
-        // EditText txtname = (EditText)findViewById(R.id.editText);
-        //  String dataToPass      =  txtname.getText().toString();
         Intent intent = new Intent(this, ManageTask.class);
-       // Toast.makeText(getApplicationContext(),"Ahhh... dont touch me now!! " +i , Toast.LENGTH_SHORT).show();
         String idName = String.valueOf(i);
         intent.putExtra("idName", idName);
         startActivity(intent);
@@ -280,8 +214,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-               // Toast.makeText(getApplicationContext(),"Ahhh... dont touch me now!! " +id[i] , Toast.LENGTH_SHORT).show();
                 manageTask(id[i]);
             }
         });
@@ -296,5 +228,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Intent intent = new Intent( context, MainActivity.class );
         intent.putExtra( NOTIFICATION_MSG, msg );
         return intent;
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        Toast.makeText(this, "Switch is : "+(isChecked ? "ON" : "OFF"), Toast.LENGTH_SHORT).show();
+        if (isChecked){
+            SharedPreferences.Editor editor = getSharedPreferences("SwitchButton", MODE_PRIVATE).edit();
+            editor.putBoolean("SwitchButton", true).apply();;
+            editor.commit();
+        }
+        else {
+            SharedPreferences.Editor editor = getSharedPreferences("SwitchButton", MODE_PRIVATE).edit();
+            editor.putBoolean("SwitchButton", false).apply();;
+            editor.commit();
+        }
     }
 }
