@@ -1,6 +1,7 @@
 package com.ericabraham.leapfrog;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -11,8 +12,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -89,6 +94,33 @@ public class MyMap extends AppCompatActivity
         // Disconnect GoogleApiClient when stopping Activity
         googleApiClient.disconnect();
     }
+
+    // Generating Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate( R.menu.map_menu, menu );
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch ( item.getItemId() ) {
+            case R.id.list_view: {
+                Intent intent = new Intent(this, MainActivity.class);
+                this.startActivity(intent);
+                return true;
+            }
+
+            case R.id.about: {
+                Intent intent = new Intent(this, About.class);
+                startActivity(intent);
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 
     private final int REQ_PERMISSION = 999;
