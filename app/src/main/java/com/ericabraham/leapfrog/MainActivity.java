@@ -23,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -58,21 +57,22 @@ public class MainActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
-//    protected ArrayList<Geofence> mGeofenceList;
+    //    protected ArrayList<Geofence> mGeofenceList;
     private int PLACE_PICKER_REQUEST = 1;
     private FloatingActionButton fabPickPlace;
     SharedPreferences sharedPrefs;
+    SharedPreferences MonState;
     boolean switchState;
+    boolean monState;
 
     private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
+
     // Create a Intent send by the notification
     public static Intent makeNotificationIntent(Context context, String msg) {
-        Intent intent = new Intent( context, MainActivity.class );
-        intent.putExtra( NOTIFICATION_MSG, msg );
+        Intent intent = new Intent(context, MyMap.class);
+        intent.putExtra(NOTIFICATION_MSG, msg);
         return intent;
     }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +80,9 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         sharedPrefs = getSharedPreferences("SwitchButton", MODE_PRIVATE);
         switchState = sharedPrefs.getBoolean("SwitchButton", false);
-     //   mGeofenceList = new ArrayList<Geofence>();
+        sharedPrefs = getSharedPreferences("MonitorState", MODE_PRIVATE);
+        monState = sharedPrefs.getBoolean("MonitorState", false);
+
 
         displayData();
 
@@ -91,10 +93,10 @@ public class MainActivity extends AppCompatActivity implements
                 .enableAutoManage(this, this)
                 .build();
 
-        googleApiClient = new GoogleApiClient.Builder( this )
-                .addConnectionCallbacks( this )
-                .addOnConnectionFailedListener( this )
-                .addApi( LocationServices.API )
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
                 .build();
 
         fabPickPlace.setOnClickListener(new View.OnClickListener() {
@@ -134,9 +136,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate( R.menu.main_menu, menu );
-        pushBtn = (Switch)menu.findItem(R.id.myswitch).getActionView().findViewById(R.id.pushBtn);
-        if(switchState){
+        inflater.inflate(R.menu.main_menu, menu);
+        pushBtn = (Switch) menu.findItem(R.id.myswitch).getActionView().findViewById(R.id.pushBtn);
+        if (switchState) {
             pushBtn.setChecked(true);
         } else {
             pushBtn.setChecked(false);
@@ -146,10 +148,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch ( item.getItemId() ) {
+        switch (item.getItemId()) {
             case R.id.addtask: {
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
                 try {
@@ -175,7 +176,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Snackbar.make(fabPickPlace, connectionResult.getErrorMessage() + "", Snackbar.LENGTH_LONG).show();
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements
                 String latitude = String.valueOf(place.getLatLng().latitude);
                 String longitude = String.valueOf(place.getLatLng().longitude);
                 String address = String.format("%s", place.getAddress());
-                taskSetting(latitude,longitude,placename,address);
+                taskSetting(latitude, longitude, placename, address);
             }
         }
     }
@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements
         this.finish();
     }
 
-//calling add new remnder activity with Lat, Long, name and address
+    //calling add new remnder activity with Lat, Long, name and address
     private void taskSetting(String lat, String longi, String pname, String address) {
         Intent intent = new Intent(this, task_setting.class);
         intent.putExtra("lat", lat);
@@ -224,8 +224,8 @@ public class MainActivity extends AppCompatActivity implements
         this.finish();
     }
 
-//generating the custom list view
-    private void displayData(){
+    //generating the custom list view
+    private void displayData() {
         locationDatabase db = new locationDatabase(this);
         db.getCount();
         String[] task;
@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements
         date = db.displayDate();
         address = db.displayAddress();
         id = db.displayId();
-        CustomList customList = new CustomList(this, task,pname,date,address,id);
+        CustomList customList = new CustomList(this, task, pname, date, address, id);
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(customList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -250,27 +250,27 @@ public class MainActivity extends AppCompatActivity implements
         initViews();
     }
 
-//Master Geo-Fencing Switch
+    //Master Geo-Fencing Switch
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Toast.makeText(this, "Switch is : "+(isChecked ? "ON" : "OFF"), Toast.LENGTH_SHORT).show();
-        if (isChecked){
+        //   Toast.makeText(this, "Switch is : "+(isChecked ? "ON" : "OFF"), Toast.LENGTH_SHORT).show();
+        if (isChecked) {
             SharedPreferences.Editor editor = getSharedPreferences("SwitchButton", MODE_PRIVATE).edit();
-            editor.putBoolean("SwitchButton", true).apply();;
+            editor.putBoolean("SwitchButton", true).apply();
             editor.commit();
             startGeofence();
-        }
-        else {
+        } else {
             SharedPreferences.Editor editor = getSharedPreferences("SwitchButton", MODE_PRIVATE).edit();
-            editor.putBoolean("SwitchButton", false).apply();;
+            editor.putBoolean("SwitchButton", false).apply();
             editor.commit();
             clearGeofence();
         }
-    };
+    }
+
+    ;
 
 
-
-//Everything needed for the background service (GEOFENCING) is beyond this point
+    //Everything needed for the background service (GEOFENCING) is beyond this point
     private final int REQ_PERMISSION = 999;
 
     // Check for permission to access Location
@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "checkPermission()");
         // Ask for permission if it wasn't granted yet
         return (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED );
+                == PackageManager.PERMISSION_GRANTED);
     }
 
     // Asks for permission
@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "askPermission()");
         ActivityCompat.requestPermissions(
                 this,
-                new String[] { android.Manifest.permission.ACCESS_FINE_LOCATION },
+                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                 REQ_PERMISSION
         );
     }
@@ -296,10 +296,10 @@ public class MainActivity extends AppCompatActivity implements
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.d(TAG, "onRequestPermissionsResult()");
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch ( requestCode ) {
+        switch (requestCode) {
             case REQ_PERMISSION: {
-                if ( grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED ){
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission granted
                     getLastKnownLocation();
 
@@ -317,26 +317,27 @@ public class MainActivity extends AppCompatActivity implements
         Log.w(TAG, "permissionsDenied()");
         // TODO close app and warn user
     }
+
     private LocationRequest locationRequest;
     // Defined in mili seconds.
     // This number in extremely low, and should be used only for debug
-    private final int UPDATE_INTERVAL =  1000;
+    private final int UPDATE_INTERVAL = 1000;
     private final int FASTEST_INTERVAL = 900;
 
     // Start location Updates
-    private void startLocationUpdates(){
+    private void startLocationUpdates() {
         Log.i(TAG, "startLocationUpdates()");
         locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(UPDATE_INTERVAL)
                 .setFastestInterval(FASTEST_INTERVAL);
-        if ( checkPermission() )
+        if (checkPermission())
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
 
 
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "onLocationChanged ["+location+"]");
+        Log.d(TAG, "onLocationChanged [" + location + "]");
         lastLocation = location;
         writeActualLocation(location);
     }
@@ -346,9 +347,11 @@ public class MainActivity extends AppCompatActivity implements
         Log.i(TAG, "onConnected()");
         getLastKnownLocation();
         //If switchState is ON then Enable Geofencing
-        if(switchState) {
+        if((switchState)&&(!monState)) {
             startGeofence();
-        }else {
+        }
+
+        if (!switchState){
             clearGeofence();
         }
     }
@@ -362,9 +365,9 @@ public class MainActivity extends AppCompatActivity implements
     // Get last known location
     private void getLastKnownLocation() {
         Log.d(TAG, "getLastKnownLocation()");
-        if ( checkPermission() ) {
+        if (checkPermission()) {
             lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            if ( lastLocation != null ) {
+            if (lastLocation != null) {
                 Log.i(TAG, "LasKnown location. " +
                         "Long: " + lastLocation.getLongitude() +
                         " | Lat: " + lastLocation.getLatitude());
@@ -374,8 +377,7 @@ public class MainActivity extends AppCompatActivity implements
                 Log.w(TAG, "No location retrieved yet");
                 startLocationUpdates();
             }
-        }
-        else askPermission();
+        } else askPermission();
     }
 
     private void writeActualLocation(Location location) {
@@ -394,46 +396,46 @@ public class MainActivity extends AppCompatActivity implements
         String[] mlong;
         String[] mtask;
         int[] taskid;
-        int [] rad;
+        int[] rad;
         mlat = db.displayLat();
         mlong = db.displayLong();
         mtask = db.displayTask();
         rad = db.displayAllRadius();
         taskid = db.displayId();
         int numberOfItems = mlat.length;
-        for (int i=0; i<numberOfItems; i++) {
+        for (int i = 0; i < numberOfItems; i++) {
             double lat = Double.parseDouble(mlat[i]);
             double lon = Double.parseDouble(mlong[i]);
             int radius = rad[i];
             String tid = toTitleCase(mtask[i]);
             LatLng latLng = new LatLng(lat, lon);
             Geofence geofence = createGeofence(latLng, radius, tid);
-            GeofencingRequest geofenceRequest = createGeofenceRequest( geofence );
-            addGeofence( geofenceRequest );
+            GeofencingRequest geofenceRequest = createGeofenceRequest(geofence);
+            addGeofence(geofenceRequest);
         }
     }
 
 
     // Create a Geofence (called by startGeofence function - in a loop)
-    private Geofence createGeofence( LatLng latLng, float radius, String tid ) {
+    private Geofence createGeofence(LatLng latLng, float radius, String tid) {
         Log.d(TAG, "createGeofence");
         return new Geofence.Builder()
                 .setRequestId(tid)
-                .setCircularRegion( latLng.latitude, latLng.longitude, radius*100)
+                .setCircularRegion(latLng.latitude, latLng.longitude, radius * 100)
                 //// TODO: 21-Sep-17 Calculate Duratation
-                .setExpirationDuration( 1000*60*60 )
-                .setTransitionTypes( Geofence.GEOFENCE_TRANSITION_ENTER
-                        | Geofence.GEOFENCE_TRANSITION_EXIT )
+                .setExpirationDuration(1000 * 60 * 60)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER
+                        | Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build();
     }
 
 
     // Create a Geofence Request  (called by startGeofence function - in a loop)
-    private GeofencingRequest createGeofenceRequest( Geofence geofence ) {
+    private GeofencingRequest createGeofenceRequest(Geofence geofence) {
         Log.d(TAG, "createGeofenceRequest");
         return new GeofencingRequest.Builder()
-                .setInitialTrigger( GeofencingRequest.INITIAL_TRIGGER_ENTER )
-                .addGeofence( geofence )
+                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                .addGeofence(geofence)
                 .build();
     }
 
@@ -443,29 +445,32 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "addGeofence");
         if (checkPermission())
             Log.d(TAG, "addGeofence");
-            LocationServices.GeofencingApi.addGeofences(
-                    googleApiClient,
-                    request,
-                    createGeofencePendingIntent()
-            ).setResultCallback(this);
+        LocationServices.GeofencingApi.addGeofences(
+                googleApiClient,
+                request,
+                createGeofencePendingIntent()
+        ).setResultCallback(this);
+        SharedPreferences.Editor editor = getSharedPreferences("MonitorState", MODE_PRIVATE).edit();
+        editor.putBoolean("MonitorState", true).apply();
+        editor.commit();
     }
 
-// Call for the service
+    // Call for the service
     private PendingIntent geoFencePendingIntent;
     private final int GEOFENCE_REQ_CODE = 0;
+
     private PendingIntent createGeofencePendingIntent() {
         Log.d(TAG, "createGeofencePendingIntent");
-        if ( geoFencePendingIntent != null )
+        if (geoFencePendingIntent != null)
             return geoFencePendingIntent;
-        Intent intent = new Intent( this, GeofenceTrasitionService.class);
-        return PendingIntent.getService(this, GEOFENCE_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT );
+        Intent intent = new Intent(this, GeofenceTrasitionService.class);
+        return PendingIntent.getService(this, GEOFENCE_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
-
 
 
     public void onResult(@NonNull Status status) {
         Log.d(TAG, "onResult: " + status);
-        if ( status.isSuccess() ) {
+        if (status.isSuccess()) {
             Log.d(TAG, "Sucess");
         } else {
             // inform about fail
@@ -483,8 +488,10 @@ public class MainActivity extends AppCompatActivity implements
         ).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
-                if ( status.isSuccess() ) {
-//                    Toast.makeText(MainActivity.this, "All Geofencing service is stopped", Toast.LENGTH_SHORT).show();
+                if (status.isSuccess()) {
+                    SharedPreferences.Editor editor = getSharedPreferences("MonitorState", MODE_PRIVATE).edit();
+                    editor.putBoolean("MonitorState", false).apply();
+                    editor.commit();
                 }
             }
         });
@@ -507,3 +514,5 @@ public class MainActivity extends AppCompatActivity implements
         return titleCase.toString();
     }
 }
+
+

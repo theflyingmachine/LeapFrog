@@ -13,7 +13,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <service android:name=".GeofenceTrasitionService" />
 
         <meta-data
@@ -34,15 +33,12 @@
             </intent-filter>
         </activity>
 
-        <!-- <meta-data -->
-        <!-- android:name="com.google.android.geo.API_KEY" -->
-        <!-- android:value="AIzaSyDHVaAJ87HzWEwFA0MmThTMpZVLbQg3fN8" /> -->
-
         <activity android:name=".task_setting" />
         <activity android:name=".ManageTask" />
         <activity android:name=".MainActivity" />
         <activity android:name=".About" />
-        <activity android:name=".MyMap"></activity>
+        <activity android:name=".MyMap" />
+
     </application>
 
 </manifest>
