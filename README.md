@@ -1,5 +1,5 @@
 # LeapFrog
-[logo]: https://github.com/theflyingmachine/LeapFrog/blob/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png "LeapFrog"
+[logo] (https://github.com/theflyingmachine/LeapFrog/blob/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png) "LeapFrog"
 -----------------------------------------
 
 
@@ -27,5 +27,4 @@ You can also:
     
 ----------------------------------------
  -- Proudly handcrafted in India.
-
 
