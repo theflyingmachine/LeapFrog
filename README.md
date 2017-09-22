@@ -1,5 +1,5 @@
 # LeapFrog
-![Alt text](/blob/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png "LeapFrog")
+![Imgur Image](https://github.com/theflyingmachine/LeapFrog/blob/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
 -----------------------------------------
 
 
