@@ -140,8 +140,10 @@ public class MainActivity extends AppCompatActivity implements
         pushBtn = (Switch) menu.findItem(R.id.myswitch).getActionView().findViewById(R.id.pushBtn);
         if (switchState) {
             pushBtn.setChecked(true);
+            pushBtn.setText("Geofencing");
         } else {
             pushBtn.setChecked(false);
+            pushBtn.setText("Geofence");
         }
         pushBtn.setOnCheckedChangeListener(this);
         return true;
@@ -259,11 +261,13 @@ public class MainActivity extends AppCompatActivity implements
             editor.putBoolean("SwitchButton", true).apply();
             editor.commit();
             startGeofence();
+            pushBtn.setText("Geofencing");
         } else {
             SharedPreferences.Editor editor = getSharedPreferences("SwitchButton", MODE_PRIVATE).edit();
             editor.putBoolean("SwitchButton", false).apply();
             editor.commit();
             clearGeofence();
+            pushBtn.setText("Geofence");
         }
     }
 

@@ -12,11 +12,14 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class About extends AppCompatActivity implements OnTouchListener{
     private ImageView wheel;
     private double mCurrAngle = 0;
     private double mPrevAngle = 0;
+    private boolean touched = true;
+
 
 
     @Override
@@ -27,6 +30,11 @@ public class About extends AppCompatActivity implements OnTouchListener{
 
         wheel=(ImageView)findViewById(R.id.mylogo);
         wheel.setOnTouchListener(this);
+
+
+        Toast.makeText(this, "Do NOT touch LeapFrog logo", Toast.LENGTH_SHORT).show();
+
+
     }
 
     // Generating Menu
@@ -63,6 +71,11 @@ public class About extends AppCompatActivity implements OnTouchListener{
 
         final float x = event.getX();
         final float y = event.getY();
+
+        if(touched){
+            Toast.makeText(this, "Aaawwww... You did it..", Toast.LENGTH_SHORT).show();
+            touched=false;
+        }
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
