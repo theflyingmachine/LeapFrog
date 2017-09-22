@@ -1,4 +1,5 @@
-# LeapFrog ![logo](https://github.com/theflyingmachine/LeapFrog/blob/master/app/src/main/res/mipmap-xhdpi/ic_launcher.png)
+![logo](https://github.com/theflyingmachine/LeapFrog/blob/master/app/src/main/res/mipmap-xhdpi/ic_launcher.png)
+# LeapFrog 
 
 -----------------------------------------
 
