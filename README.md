@@ -1,5 +1,5 @@
-# LeapFrog
-![Imgur Image](https://github.com/theflyingmachine/LeapFrog/blob/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
+# LeapFrog ![logo](https://github.com/theflyingmachine/LeapFrog/blob/master/app/src/main/res/mipmap-xhdpi/ic_launcher.png)
+
 -----------------------------------------
 
 
