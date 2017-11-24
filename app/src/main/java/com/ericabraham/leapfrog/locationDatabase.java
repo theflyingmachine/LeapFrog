@@ -297,11 +297,11 @@ public class locationDatabase extends SQLiteOpenHelper {
     }
 
 
-    //To delete a Task entry
-    public void getCount() {
+    //To get total number to records in the database
+    public int getCount() {
         SQLiteDatabase db = this.getWritableDatabase();
         long numRows = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
-        rowCount = (int)numRows;
+        return rowCount = (int)numRows;
     }
 
 }
