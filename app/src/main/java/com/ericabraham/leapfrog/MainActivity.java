@@ -52,20 +52,21 @@ public class MainActivity extends AppCompatActivity implements
         ResultCallback<Status> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private ListView listView;
+    private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
+    //Everything needed for the background service (GEOFENCING) is beyond this point
+    private final int REQ_PERMISSION = 999;
+
+    private boolean switchState;
+    private boolean monState;
     private Switch pushBtn;
     private GoogleApiClient mGoogleApiClient;
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
     //    protected ArrayList<Geofence> mGeofenceList;
-    private int PLACE_PICKER_REQUEST = 1;
+    private final int PLACE_PICKER_REQUEST = 1;
     private FloatingActionButton fabPickPlace;
-    SharedPreferences sharedPrefs;
-    SharedPreferences MonState;
-    boolean switchState;
-    boolean monState;
-
-    private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
+    // Call for the service
+    private PendingIntent geoFencePendingIntent;
 
     // Create a Intent send by the notification
     public static Intent makeNotificationIntent(Context context, String msg) {
@@ -74,11 +75,27 @@ public class MainActivity extends AppCompatActivity implements
         return intent;
     }
 
+    // Convert Task Title to Camel Case
+    private static String toTitleCase(String input) {
+        StringBuilder titleCase = new StringBuilder();
+        boolean nextTitleCase = true;
+        for (char c : input.toCharArray()) {
+            if (Character.isSpaceChar(c)) {
+                nextTitleCase = true;
+            } else if (nextTitleCase) {
+                c = Character.toTitleCase(c);
+                nextTitleCase = false;
+            }
+            titleCase.append(c);
+        }
+        return titleCase.toString();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPrefs = getSharedPreferences("SwitchButton", MODE_PRIVATE);
+        SharedPreferences sharedPrefs = getSharedPreferences("SwitchButton", MODE_PRIVATE);
         switchState = sharedPrefs.getBoolean("SwitchButton", false);
         sharedPrefs = getSharedPreferences("MonitorState", MODE_PRIVATE);
         monState = sharedPrefs.getBoolean("MonitorState", false);
@@ -112,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-
     private void initViews() {
         fabPickPlace = (FloatingActionButton) findViewById(R.id.fab);
     }
@@ -131,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onStop();
     }
 
-
     // Generating Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -148,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements
         pushBtn.setOnCheckedChangeListener(this);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -177,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Snackbar.make(fabPickPlace, connectionResult.getErrorMessage() + "", Snackbar.LENGTH_LONG).show();
@@ -190,7 +203,6 @@ public class MainActivity extends AppCompatActivity implements
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
-                StringBuilder stBuilder = new StringBuilder();
                 String placename = String.format("%s", place.getName());
                 String latitude = String.valueOf(place.getLatLng().latitude);
                 String longitude = String.valueOf(place.getLatLng().longitude);
@@ -240,8 +252,8 @@ public class MainActivity extends AppCompatActivity implements
         date = db.displayDate();
         address = db.displayAddress();
         id = db.displayId();
-        CustomList customList = new CustomList(this, task, pname, date, address, id);
-        listView = (ListView) findViewById(R.id.listView);
+        CustomList customList = new CustomList(this, task, pname, date, address);
+        ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(customList);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -259,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements
         if (isChecked) {
             SharedPreferences.Editor editor = getSharedPreferences("SwitchButton", MODE_PRIVATE).edit();
             editor.putBoolean("SwitchButton", true).apply();
-            editor.commit();
+            editor.apply();
             startGeofence();
             pushBtn.setText("Geofencing");
         } else {
@@ -270,12 +282,6 @@ public class MainActivity extends AppCompatActivity implements
             pushBtn.setText("Geofence");
         }
     }
-
-    ;
-
-
-    //Everything needed for the background service (GEOFENCING) is beyond this point
-    private final int REQ_PERMISSION = 999;
 
     // Check for permission to access Location
     private boolean checkPermission() {
@@ -322,23 +328,18 @@ public class MainActivity extends AppCompatActivity implements
         // TODO close app and warn user
     }
 
-    private LocationRequest locationRequest;
-    // Defined in mili seconds.
-    // This number in extremely low, and should be used only for debug
-    private final int UPDATE_INTERVAL = 1000;
-    private final int FASTEST_INTERVAL = 900;
-
     // Start location Updates
     private void startLocationUpdates() {
         Log.i(TAG, "startLocationUpdates()");
-        locationRequest = LocationRequest.create()
+        int UPDATE_INTERVAL = 1000;
+        int FASTEST_INTERVAL = 900;
+        LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(UPDATE_INTERVAL)
                 .setFastestInterval(FASTEST_INTERVAL);
         if (checkPermission())
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
-
 
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged [" + location + "]");
@@ -351,11 +352,11 @@ public class MainActivity extends AppCompatActivity implements
         Log.i(TAG, "onConnected()");
         getLastKnownLocation();
         //If switchState is ON then Enable Geofencing
-        if((switchState)&&(!monState)) {
+        if ((switchState) && (!monState)) {
             startGeofence();
         }
 
-        if (!switchState){
+        if (!switchState) {
             clearGeofence();
         }
     }
@@ -364,7 +365,6 @@ public class MainActivity extends AppCompatActivity implements
     public void onConnectionSuspended(int i) {
         Log.w(TAG, "onConnectionSuspended()");
     }
-
 
     // Get last known location
     private void getLastKnownLocation() {
@@ -399,13 +399,12 @@ public class MainActivity extends AppCompatActivity implements
         String[] mlat;
         String[] mlong;
         String[] mtask;
-        int[] taskid;
         int[] rad;
         mlat = db.displayLat();
         mlong = db.displayLong();
         mtask = db.displayTask();
         rad = db.displayAllRadius();
-        taskid = db.displayId();
+
         int numberOfItems = mlat.length;
         for (int i = 0; i < numberOfItems; i++) {
             double lat = Double.parseDouble(mlat[i]);
@@ -418,7 +417,6 @@ public class MainActivity extends AppCompatActivity implements
             addGeofence(geofenceRequest);
         }
     }
-
 
     // Create a Geofence (called by startGeofence function - in a loop)
     private Geofence createGeofence(LatLng latLng, float radius, String tid) {
@@ -433,7 +431,6 @@ public class MainActivity extends AppCompatActivity implements
                 .build();
     }
 
-
     // Create a Geofence Request  (called by startGeofence function - in a loop)
     private GeofencingRequest createGeofenceRequest(Geofence geofence) {
         Log.d(TAG, "createGeofenceRequest");
@@ -442,7 +439,6 @@ public class MainActivity extends AppCompatActivity implements
                 .addGeofence(geofence)
                 .build();
     }
-
 
     // Add the created GeofenceRequest to the device's monitoring list
     private void addGeofence(GeofencingRequest request) {
@@ -459,18 +455,14 @@ public class MainActivity extends AppCompatActivity implements
         editor.commit();
     }
 
-    // Call for the service
-    private PendingIntent geoFencePendingIntent;
-    private final int GEOFENCE_REQ_CODE = 0;
-
     private PendingIntent createGeofencePendingIntent() {
         Log.d(TAG, "createGeofencePendingIntent");
         if (geoFencePendingIntent != null)
             return geoFencePendingIntent;
         Intent intent = new Intent(this, GeofenceTrasitionService.class);
+        int GEOFENCE_REQ_CODE = 0;
         return PendingIntent.getService(this, GEOFENCE_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
-
 
     public void onResult(@NonNull Status status) {
         Log.d(TAG, "onResult: " + status);
@@ -481,7 +473,6 @@ public class MainActivity extends AppCompatActivity implements
             Log.d(TAG, "Fail");
         }
     }
-
 
     // Clear Geofence
     private void clearGeofence() {
@@ -499,23 +490,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         });
-    }
-
-
-    // Convert Task Title to Camel Case
-    public static String toTitleCase(String input) {
-        StringBuilder titleCase = new StringBuilder();
-        boolean nextTitleCase = true;
-        for (char c : input.toCharArray()) {
-            if (Character.isSpaceChar(c)) {
-                nextTitleCase = true;
-            } else if (nextTitleCase) {
-                c = Character.toTitleCase(c);
-                nextTitleCase = false;
-            }
-            titleCase.append(c);
-        }
-        return titleCase.toString();
     }
 }
 

@@ -39,22 +39,38 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MyMap extends AppCompatActivity
         implements
-            GoogleApiClient.ConnectionCallbacks,
-            GoogleApiClient.OnConnectionFailedListener,
-            LocationListener,
-            OnMapReadyCallback,
-            GoogleMap.OnMapClickListener,
-            GoogleMap.OnMarkerClickListener,
-            ResultCallback<Status> {
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener,
+        OnMapReadyCallback,
+        GoogleMap.OnMapClickListener,
+        GoogleMap.OnMarkerClickListener,
+        ResultCallback<Status> {
 
     private static final String TAG = MyMap.class.getSimpleName();
-
+    private final int REQ_PERMISSION = 999;
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
     private TextView textLat, textLong;
-    private MapFragment mapFragment;
+    private Marker locationMarker;
+    private Marker geoFenceMarker;
 
+    // Convert Task Title to Camel Case
+    private static String toTitleCase(String input) {
+        StringBuilder titleCase = new StringBuilder();
+        boolean nextTitleCase = true;
+        for (char c : input.toCharArray()) {
+            if (Character.isSpaceChar(c)) {
+                nextTitleCase = true;
+            } else if (nextTitleCase) {
+                c = Character.toTitleCase(c);
+                nextTitleCase = false;
+            }
+            titleCase.append(c);
+        }
+        return titleCase.toString();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +88,11 @@ public class MyMap extends AppCompatActivity
 
     // Create GoogleApiClient instance
     private void createGoogleApi() {
-        if ( googleApiClient == null ) {
-            googleApiClient = new GoogleApiClient.Builder( this )
-                    .addConnectionCallbacks( this )
-                    .addOnConnectionFailedListener( this )
-                    .addApi( LocationServices.API )
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
                     .build();
         }
     }
@@ -99,13 +115,13 @@ public class MyMap extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate( R.menu.map_menu, menu );
+        inflater.inflate(R.menu.map_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch ( item.getItemId() ) {
+        switch (item.getItemId()) {
             case R.id.list_view: {
                 Intent intent = new Intent(this, MainActivity.class);
                 this.startActivity(intent);
@@ -121,21 +137,18 @@ public class MyMap extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-
-
-    private final int REQ_PERMISSION = 999;
-// Check for permission to access Location
+    // Check for permission to access Location
     private boolean checkPermission() {
         // Ask for permission if it wasn't granted yet
         return (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED );
+                == PackageManager.PERMISSION_GRANTED);
     }
 
     // Asks for permission
     private void askPermission() {
         ActivityCompat.requestPermissions(
                 this,
-                new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 REQ_PERMISSION
         );
     }
@@ -144,10 +157,10 @@ public class MyMap extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch ( requestCode ) {
+        switch (requestCode) {
             case REQ_PERMISSION: {
-                if ( grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED ){
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission granted
                     getLastKnownLocation();
 
@@ -162,12 +175,12 @@ public class MyMap extends AppCompatActivity
 
     // App cannot work without the permissions
     private void permissionsDenied() {
-        Toast.makeText(getApplicationContext(),"Leapfrog is Denied to get your current location",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Leapfrog is Denied to get your current location", Toast.LENGTH_SHORT).show();
     }
 
     // Initialize GoogleMaps
-    private void initGMaps(){
-        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+    private void initGMaps() {
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
@@ -186,20 +199,16 @@ public class MyMap extends AppCompatActivity
         return false;
     }
 
-    private LocationRequest locationRequest;
-    // Defined in mili seconds.
-    // This number in extremely low, and should be used only for debug
-    private final int UPDATE_INTERVAL =  1000;
-    private final int FASTEST_INTERVAL = 900;
-
     // Start location Updates
-    private void startLocationUpdates(){
+    private void startLocationUpdates() {
 
-        locationRequest = LocationRequest.create()
+        int FASTEST_INTERVAL = 900;
+        int UPDATE_INTERVAL = 1000;
+        LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(UPDATE_INTERVAL)
                 .setFastestInterval(FASTEST_INTERVAL);
-        if ( checkPermission() )
+        if (checkPermission())
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
 
@@ -229,21 +238,20 @@ public class MyMap extends AppCompatActivity
 
     // Get last known location
     private void getLastKnownLocation() {
-        if ( checkPermission() ) {
+        if (checkPermission()) {
             lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            if ( lastLocation != null ) {
+            if (lastLocation != null) {
                 writeLastLocation();
                 startLocationUpdates();
             } else {
                 startLocationUpdates();
             }
-        }
-        else askPermission();
+        } else askPermission();
     }
 
     private void writeActualLocation(Location location) {
-        textLat.setText( "Lat: " + location.getLatitude() );
-        textLong.setText( "Long: " + location.getLongitude() );
+        textLat.setText("Lat: " + location.getLatitude());
+        textLong.setText("Long: " + location.getLongitude());
 
         markerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
     }
@@ -252,14 +260,13 @@ public class MyMap extends AppCompatActivity
         writeActualLocation(lastLocation);
     }
 
-    private Marker locationMarker;
     private void markerLocation(LatLng latLng) {
         String title = latLng.latitude + ", " + latLng.longitude;
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(latLng)
                 .title(title);
-        if ( map!=null ) {
-            if ( locationMarker != null )
+        if (map != null) {
+            if (locationMarker != null)
                 locationMarker.remove();
             locationMarker = map.addMarker(markerOptions);
             float zoom = 14f;
@@ -268,8 +275,6 @@ public class MyMap extends AppCompatActivity
         }
     }
 
-
-    private Marker geoFenceMarker;
     private void markerForGeofence(LatLng latLng, String task) {
         String title = toTitleCase(task);
         // Define marker options
@@ -277,29 +282,24 @@ public class MyMap extends AppCompatActivity
                 .position(latLng)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
                 .title(title);
-        if ( map!=null ) {
+        if (map != null) {
             geoFenceMarker = map.addMarker(markerOptions);
 
         }
     }
 
-
-
     @Override
     public void onResult(@NonNull Status status) {
-        if ( status.isSuccess() ) {
-        }
+
     }
 
-    // Draw Geofence circle on GoogleMap
-   private Circle geoFenceLimits;
     private void drawGeofence(int r) {
         CircleOptions circleOptions = new CircleOptions()
-                .center( geoFenceMarker.getPosition())
-                .strokeColor(Color.argb(50,255, 0, 0))
-                .fillColor( Color.argb(50,143, 112, 255) )
-                .radius( r*100 );
-        geoFenceLimits = map.addCircle( circleOptions );
+                .center(geoFenceMarker.getPosition())
+                .strokeColor(Color.argb(50, 255, 0, 0))
+                .fillColor(Color.argb(50, 143, 112, 255))
+                .radius(r * 100);
+        Circle geoFenceLimits = map.addCircle(circleOptions);
     }
 
     // Recovering last Geofence marker
@@ -309,36 +309,19 @@ public class MyMap extends AppCompatActivity
         String[] mlat;
         String[] mlong;
         String[] mtask;
-        int [] rad;
+        int[] rad;
         mlat = db.displayLat();
         mlong = db.displayLong();
         mtask = db.displayTask();
         rad = db.displayAllRadius();
         int numberOfItems = mlat.length;
-        for (int i=0; i<numberOfItems; i++)
-        {
+        for (int i = 0; i < numberOfItems; i++) {
             double lat = Double.parseDouble(mlat[i]);
             double lon = Double.parseDouble(mlong[i]);
-            LatLng latLng = new LatLng( lat, lon );
+            LatLng latLng = new LatLng(lat, lon);
             markerForGeofence(latLng, mtask[i]);
             drawGeofence(rad[i]);
         }
-    }
-
-// Convert Task Title to Camel Case
-    public static String toTitleCase(String input) {
-        StringBuilder titleCase = new StringBuilder();
-        boolean nextTitleCase = true;
-        for (char c : input.toCharArray()) {
-            if (Character.isSpaceChar(c)) {
-                nextTitleCase = true;
-            } else if (nextTitleCase) {
-                c = Character.toTitleCase(c);
-                nextTitleCase = false;
-            }
-            titleCase.append(c);
-        }
-        return titleCase.toString();
     }
 
 }

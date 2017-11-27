@@ -16,11 +16,8 @@ import java.util.Calendar;
 
 public class task_setting extends AppCompatActivity {
 
-    private Button cancel_button;
-    private Button save_button;
-    EditText date;
-    DatePickerDialog datePickerDialog;
-
+    private EditText date;
+    private DatePickerDialog datePickerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +26,7 @@ public class task_setting extends AppCompatActivity {
 
         // initiate the date picker and a button
         date = (EditText) findViewById(R.id.date);
-
+        date.setKeyListener(null);
         // perform click event on edit text
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,8 +49,8 @@ public class task_setting extends AppCompatActivity {
                                 // set day of month , month and year value in the edit text
 
                                 final String[] MONTHS = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-                                String mon=MONTHS[monthOfYear];
-                                date.setText(mon +" " +  dayOfMonth + ", " + year);
+                                String mon = MONTHS[monthOfYear];
+                                date.setText(mon + " " + dayOfMonth + ", " + year);
                             }
                         }, mYear, mMonth, mDay);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
@@ -62,64 +59,60 @@ public class task_setting extends AppCompatActivity {
         });
 
 
-       final locationDatabase db = new locationDatabase(this);
+        final locationDatabase db = new locationDatabase(this);
 
-        cancel_button = (Button) findViewById(R.id.cancel_button);
+        Button cancel_button = (Button) findViewById(R.id.cancel_button);
 
         cancel_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-             //   finish();
+                //   finish();
                 saveNoStatus();
             }
         });
 
 
-
-
-        save_button = (Button) findViewById(R.id.save_button);
+        Button save_button = (Button) findViewById(R.id.save_button);
 
         save_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = getIntent();
                 String latitude = getIntent().getStringExtra("lat");
                 String longitude = getIntent().getStringExtra("longi");
                 String pname = getIntent().getStringExtra("pname");
                 String address = getIntent().getStringExtra("address");
 
 
-                EditText txtname = (EditText)findViewById(R.id.title_edittext);
-                String task      =  txtname.getText().toString();
+                EditText txtname = (EditText) findViewById(R.id.title_edittext);
+                String task = txtname.getText().toString();
 
-                EditText todoTxt = (EditText)findViewById(R.id.todo_edittext);
-                String todo      =  todoTxt.getText().toString();
+                EditText todoTxt = (EditText) findViewById(R.id.todo_edittext);
+                String todo = todoTxt.getText().toString();
 
-                SeekBar  rad = (SeekBar)findViewById(R.id.seekBar);
+                SeekBar rad = (SeekBar) findViewById(R.id.seekBar);
                 int radius = rad.getProgress();
 
-                EditText datetxt = (EditText)findViewById(R.id.date);
-                String date      =  datetxt.getText().toString();
+                EditText datetxt = (EditText) findViewById(R.id.date);
+                String date = datetxt.getText().toString();
 
 // Validation
-                if(task.equals("")) {
-                    Toast.makeText(getApplicationContext(),"Awww... Pleas give me a TITLE.",Toast.LENGTH_SHORT).show();
+                if (task.equals("")) {
+                    Toast.makeText(getApplicationContext(), "Awww... Pleas give me a TITLE.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(date.equals("")) {
-                    Toast.makeText(getApplicationContext(),"Awww... do i have a DATE?.",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if(todo.equals("")) {
-                    Toast.makeText(getApplicationContext(),"Awww... I can not remind NOTHING.",Toast.LENGTH_SHORT).show();
+                if (date.equals("")) {
+                    Toast.makeText(getApplicationContext(), "Awww... do i have a DATE?.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                db.insertLocation(latitude,longitude,task,todo,radius,date,pname,address);
+                if (todo.equals("")) {
+                    Toast.makeText(getApplicationContext(), "Awww... I can not remind NOTHING.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                db.insertLocation(latitude, longitude, task, todo, radius, date, pname, address);
                 saveOkStatus();
-
 
 
             }
@@ -135,23 +128,19 @@ public class task_setting extends AppCompatActivity {
         this.finish();
     }
 
-    public boolean saveOkStatus(){
-        Toast.makeText(getApplicationContext(),"Ahhh... Saved!! ",Toast.LENGTH_SHORT).show();
+    private void saveOkStatus() {
+        Toast.makeText(getApplicationContext(), "Ahhh... Saved!! ", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
-      return true;
     }
 
-    public boolean saveNoStatus(){
-        Toast.makeText(getApplicationContext(),"Ahhh... NOT SAVED!! ",Toast.LENGTH_SHORT).show();
+    private void saveNoStatus() {
+        Toast.makeText(getApplicationContext(), "Ahhh... NOT SAVED!! ", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         this.finish();
-        return false;
     }
-
-
 
 
 }

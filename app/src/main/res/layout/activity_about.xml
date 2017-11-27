@@ -5,45 +5,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:orientation="vertical"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.ericabraham.leapfrog.MyMap">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingBottom="5dp">
+        android:paddingTop="5dp">
         <!--Longitude-->
         <ImageView
             android:id="@+id/mylogo"
             android:layout_width="wrap_content"
             android:layout_height="332dp"
             android:gravity="center"
-            app:srcCompat="@drawable/logo" />
+            app:srcCompat="@drawable/logo"
+            android:contentDescription="Logo" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="76dp"
         android:orientation="horizontal"
-        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingBottom="5dp">
+        android:paddingTop="5dp">
 
         <TextView
             android:id="@+id/lon"
             android:layout_width="wrap_content"
             android:layout_height="68dp"
             android:layout_weight="5.33"
-            android:text="LeapFrog"
             android:gravity="center"
+            android:text="LeapFrog"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2" />
     </LinearLayout>
 
@@ -51,10 +53,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingBottom="5dp">
+        android:paddingTop="5dp">
 
 
         <TextView
@@ -62,15 +64,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="Location Based Reminder"
             android:gravity="center"
+            android:text="Location Based Reminder"
             android:textAppearance="@style/TextAppearance.AppCompat.Button" />
     </LinearLayout>
-
-
-
-
-
 
 
 </LinearLayout>

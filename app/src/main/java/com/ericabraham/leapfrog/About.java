@@ -14,12 +14,10 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class About extends AppCompatActivity implements OnTouchListener{
+public class About extends AppCompatActivity implements OnTouchListener {
     private ImageView wheel;
     private double mCurrAngle = 0;
-    private double mPrevAngle = 0;
     private boolean touched = true;
-
 
 
     @Override
@@ -28,7 +26,7 @@ public class About extends AppCompatActivity implements OnTouchListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        wheel=(ImageView)findViewById(R.id.mylogo);
+        wheel = (ImageView) findViewById(R.id.mylogo);
         wheel.setOnTouchListener(this);
 
 
@@ -41,13 +39,13 @@ public class About extends AppCompatActivity implements OnTouchListener{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate( R.menu.about_menu, menu );
+        inflater.inflate(R.menu.about_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch ( item.getItemId() ) {
+        switch (item.getItemId()) {
             case R.id.list_view: {
                 Intent intent = new Intent(this, MainActivity.class);
                 this.startActivity(intent);
@@ -72,9 +70,9 @@ public class About extends AppCompatActivity implements OnTouchListener{
         final float x = event.getX();
         final float y = event.getY();
 
-        if(touched){
+        if (touched) {
             Toast.makeText(this, "Aaawwww... You did it..", Toast.LENGTH_SHORT).show();
-            touched=false;
+            touched = false;
         }
 
         switch (event.getAction()) {
@@ -83,30 +81,32 @@ public class About extends AppCompatActivity implements OnTouchListener{
                 mCurrAngle = Math.toDegrees(Math.atan2(x - xc, yc - y));
                 break;
             }
-            case MotionEvent.ACTION_MOVE: {
+            case MotionEvent.ACTION_MOVE:
+                double mPrevAngle;
+            {
                 mPrevAngle = mCurrAngle;
                 mCurrAngle = Math.toDegrees(Math.atan2(x - xc, yc - y));
-                animate(mPrevAngle, mCurrAngle, 0);
+                animate(mPrevAngle, mCurrAngle);
                 System.out.println(mCurrAngle);
                 //audio
 //                mPlayer.start();
                 break;
             }
-            case MotionEvent.ACTION_UP : {
-                mPrevAngle = mCurrAngle = 0;
+            case MotionEvent.ACTION_UP: {
+
                 break;
             }
         }
         return true;
     }
 
-    private void animate(double fromDegrees, double toDegrees, long durationMillis) {
+    private void animate(double fromDegrees, double toDegrees) {
         MediaPlayer mPlayer = MediaPlayer.create(this, R.raw.about_wouble); // in 2nd param u have to pass your desire ringtone
         mPlayer.start();
         final RotateAnimation rotate = new RotateAnimation((float) fromDegrees, (float) toDegrees,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f);
-        rotate.setDuration(durationMillis);
+        rotate.setDuration((long) 500);
         rotate.setFillEnabled(true);
         rotate.setFillAfter(true);
         wheel.startAnimation(rotate);

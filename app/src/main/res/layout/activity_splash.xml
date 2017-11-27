@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         app:srcCompat="@drawable/splashimg"
         tools:layout_editor_absoluteX="44dp"
-        tools:layout_editor_absoluteY="16dp" />
+        tools:layout_editor_absoluteY="16dp"
+        android:contentDescription="Logo" />
 
 </android.support.constraint.ConstraintLayout>

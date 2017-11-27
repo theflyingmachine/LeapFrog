@@ -9,11 +9,11 @@ LeapFrog is an Android Application which can be used to set up Location Based Re
 
   - Pick location on map
   - Set task, Radius and Date
-  - Magic, Leapfrog remindes you when you arive at the geofenced area.
+  - Magic, Leapfrog reminds you when you arrive at the geofenced area.
 
 ### New Features!
 
-  - Works even if the app is closed (only needs a fliped switch on the app).
+  - Works even if the app is closed (only needs a flipped switch on the app).
   - Notification when opened, takes directly to the map view.
 
 

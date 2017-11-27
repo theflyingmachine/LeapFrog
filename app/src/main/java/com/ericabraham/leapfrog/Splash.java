@@ -10,19 +10,15 @@ import android.support.annotation.RequiresApi;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-
-import java.text.ParseException;
 import java.util.Date;
 
 public class Splash extends Activity {
 
-    /** Duration of wait **/
-    private final int SPLASH_DISPLAY_LENGTH = 500;
-    ImageView im;
-    /** Called when the activity is first created. */
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle icicle) {
-
 
 
         super.onCreate(icicle);
@@ -36,22 +32,22 @@ public class Splash extends Activity {
 //set content view AFTER ABOVE sequence (to avoid crash)
         this.setContentView(R.layout.activity_splash);
 
-        im=(ImageView)findViewById(R.id.imageView);
+        ImageView im = (ImageView) findViewById(R.id.imageView);
         im.setImageResource(R.drawable.splashimg);
 
         /* New Handler to start the Menu-Activity
          * and close this plash-Screen after some seconds.*/
-        new Handler().postDelayed(new Runnable(){
+        /*
+      Duration of wait
+     */
+        int SPLASH_DISPLAY_LENGTH = 500;
+        new Handler().postDelayed(new Runnable() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void run() {
-                try {
-                    cleanUp();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                cleanUp();
                 /* Create an Intent that will start the Menu-Activity. */
-                Intent mainIntent = new Intent(Splash.this,MainActivity.class);
+                Intent mainIntent = new Intent(Splash.this, MainActivity.class);
                 startActivity(mainIntent);
                 finish();
             }
@@ -60,15 +56,14 @@ public class Splash extends Activity {
     }
 
 
-
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void cleanUp() throws java.text.ParseException {
+    private void cleanUp() {
         locationDatabase db = new locationDatabase(this);
         final int count = db.getCount();
         final int[] id = db.displayId();
         String[] dateStr = db.displayDate();
         String monthToNumStr = "";
-        int monthToNum = 0;
+        int monthToNum;
         for (int i = 0; i < count; i++) {
             String[] splitDate = dateStr[i].split("\\s+");
             String month = splitDate[0];
@@ -93,11 +88,9 @@ public class Splash extends Activity {
             Date current = new Date();
             Date prev = new Date(conStrDate);
             //compare both dates
-            if(prev.before(current)) db.delTask(id[i]);
+            if (prev.before(current)) db.delTask(id[i]);
         }
     }
-
-
 
 
 }

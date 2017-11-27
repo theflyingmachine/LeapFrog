@@ -7,27 +7,24 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by Eric Abraham on 12-Sep-17.
- */
 
-public class locationDatabase extends SQLiteOpenHelper {
+class locationDatabase extends SQLiteOpenHelper {
 
-    int rowCount=0;
+    private static final String TABLE_NAME = "reminder";
+    private static final String COLUMN_NAME_ID = "id";
+    private static final String COLUMN_NAME_LAT = "latitude";
+    private static final String COLUMN_NAME_LONG = "longitude";
+    private static final String COLUMN_NAME_TASK = "task";
+    private static final String COLUMN_NAME_TODO = "todo";
+    private static final String COLUMN_NAME_RADIUS = "radius";
+    private static final String COLUMN_NAME_DATE = "date";
+    private static final String COLUMN_NAME_NAME = "pname";
+    private static final String COLUMN_NAME_ADDRESS = "paddress";
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "leapfrog";
-    public static final String TABLE_NAME = "reminder";
-    public static final String COLUMN_NAME_ID = "id";
-    public static final String COLUMN_NAME_LAT = "latitude";
-    public static final String COLUMN_NAME_LONG = "longitude";
-    public static final String COLUMN_NAME_TASK = "task";
-    public static final String COLUMN_NAME_TODO = "todo";
-    public static final String COLUMN_NAME_RADIUS = "radius";
-    public static final String COLUMN_NAME_DATE = "date";
-    public static final String COLUMN_NAME_NAME = "pname";
-    public static final String COLUMN_NAME_ADDRESS = "paddress";
+    private int rowCount = 0;
 
-   public locationDatabase(Context context) {
+    public locationDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -53,7 +50,7 @@ public class locationDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertLocation(String lat, String longi, String task, String todo, Integer radius, String date, String pname, String address){
+    public void insertLocation(String lat, String longi, String task, String todo, Integer radius, String date, String pname, String address) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -70,29 +67,10 @@ public class locationDatabase extends SQLiteOpenHelper {
         // Inserting Row
         db.insert(TABLE_NAME, null, values);
         //2nd argument is String containing nullColumnHack
-       // db.close(); // Closing database connection
+        // db.close(); // Closing database connection
     }
 
-    public String[] displayLocation() {
-        String selectQuery = "SELECT  * FROM " + TABLE_NAME;
 
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        String[] reminderdata = new String[100];
-        int i=0;
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                reminderdata[i]=cursor.getString(0);
-                i++;
-                reminderdata[i]=cursor.getString(1);
-                i++;
-                reminderdata[i] = cursor.getString(2);
-                i++;
-            } while (cursor.moveToNext());
-        }
-        return reminderdata;
-    }
 
 
     public String[] displayLat() {
@@ -111,32 +89,32 @@ public class locationDatabase extends SQLiteOpenHelper {
         return lat;
     }
 
-        public String[] displayLong() {
-            String selectQuery = "SELECT * FROM " + TABLE_NAME;
-            SQLiteDatabase db = this.getWritableDatabase();
-            Cursor cursor = db.rawQuery(selectQuery, null);
-            String[] longi = new String[rowCount];
-            int i = 0;
-            // looping through all rows and adding to list
-            if (cursor.moveToFirst()) {
-                do {
-                    longi[i] = cursor.getString(2);
-                    i++;
-                } while (cursor.moveToNext());
-            }
-            return longi;
+    public String[] displayLong() {
+        String selectQuery = "SELECT * FROM " + TABLE_NAME;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        String[] longi = new String[rowCount];
+        int i = 0;
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                longi[i] = cursor.getString(2);
+                i++;
+            } while (cursor.moveToNext());
         }
+        return longi;
+    }
 
     public String[] displayTask() {
         String selectQuery = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         String[] task = new String[rowCount];
-        int i=0;
+        int i = 0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                task[i]=cursor.getString(3);
+                task[i] = cursor.getString(3);
                 i++;
             } while (cursor.moveToNext());
         }
@@ -148,11 +126,11 @@ public class locationDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         String[] name = new String[rowCount];
-        int i=0;
+        int i = 0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                name[i]=cursor.getString(7);
+                name[i] = cursor.getString(7);
                 i++;
             } while (cursor.moveToNext());
         }
@@ -164,11 +142,11 @@ public class locationDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         int[] rad = new int[rowCount];
-        int i=0;
+        int i = 0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                rad[i]=cursor.getInt(5);
+                rad[i] = cursor.getInt(5);
                 i++;
             } while (cursor.moveToNext());
         }
@@ -181,11 +159,11 @@ public class locationDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         String[] date = new String[rowCount];
-        int i=0;
+        int i = 0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                date[i]=cursor.getString(6);
+                date[i] = cursor.getString(6);
                 i++;
             } while (cursor.moveToNext());
         }
@@ -198,11 +176,11 @@ public class locationDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         String[] add = new String[rowCount];
-        int i=0;
+        int i = 0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                add[i]=cursor.getString(8);
+                add[i] = cursor.getString(8);
                 i++;
             } while (cursor.moveToNext());
         }
@@ -210,18 +188,16 @@ public class locationDatabase extends SQLiteOpenHelper {
     }
 
 
-
-
     public int[] displayId() {
         String selectQuery = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         int[] id = new int[rowCount];
-        int i=0;
+        int i = 0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                id[i]=Integer.parseInt(cursor.getString(0));
+                id[i] = Integer.parseInt(cursor.getString(0));
                 i++;
             } while (cursor.moveToNext());
         }
@@ -229,25 +205,10 @@ public class locationDatabase extends SQLiteOpenHelper {
     }
 
 
-    public String[] displayTodo() {
-        String selectQuery = "SELECT * FROM " + TABLE_NAME;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        String[] todo = new String[rowCount];
-        int i=0;
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                todo[i]=cursor.getString(4);
-                i++;
-            } while (cursor.moveToNext());
-        }
-        return todo;
-    }
 
-//get radius
+    //get radius
     public int displayRadius(int i) {
-        String selectQuery = "SELECT "+COLUMN_NAME_RADIUS +" FROM " + TABLE_NAME +" WHERE " + COLUMN_NAME_ID + " = " +i;
+        String selectQuery = "SELECT " + COLUMN_NAME_RADIUS + " FROM " + TABLE_NAME + " WHERE " + COLUMN_NAME_ID + " = " + i;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         int rad = 0;
@@ -260,9 +221,9 @@ public class locationDatabase extends SQLiteOpenHelper {
     }
 
 
-//get individual result to manage task
+    //get individual result to manage task
     public String[] displayTask(int i) {
-        String selectQuery = "SELECT * FROM " + TABLE_NAME +" WHERE " +COLUMN_NAME_ID +" = " +i;
+        String selectQuery = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_NAME_ID + " = " + i;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         String[] myTask = new String[10];
@@ -285,15 +246,15 @@ public class locationDatabase extends SQLiteOpenHelper {
 
 
     //To update the databse
-    public void updateTask(int id, String task, String todo, Integer radius, String date){
+    public void updateTask(int id, String task, String todo, Integer radius, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.execSQL("UPDATE " + TABLE_NAME + " SET "
-                +COLUMN_NAME_TASK + " = '" + task +"', "
-                +COLUMN_NAME_TODO + " = '" + todo +"', "
-                +COLUMN_NAME_RADIUS + " = " + radius +", "
-                +COLUMN_NAME_DATE + " = '" + date +"' "
-                +" WHERE " +COLUMN_NAME_ID + " = " + id + ";");
+                + COLUMN_NAME_TASK + " = '" + task + "', "
+                + COLUMN_NAME_TODO + " = '" + todo + "', "
+                + COLUMN_NAME_RADIUS + " = " + radius + ", "
+                + COLUMN_NAME_DATE + " = '" + date + "' "
+                + " WHERE " + COLUMN_NAME_ID + " = " + id + ";");
     }
 
 
@@ -301,7 +262,7 @@ public class locationDatabase extends SQLiteOpenHelper {
     public int getCount() {
         SQLiteDatabase db = this.getWritableDatabase();
         long numRows = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
-        return rowCount = (int)numRows;
+        return rowCount = (int) numRows;
     }
 
 }
