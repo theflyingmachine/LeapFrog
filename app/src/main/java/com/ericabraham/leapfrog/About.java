@@ -26,7 +26,7 @@ public class About extends AppCompatActivity implements OnTouchListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        wheel = (ImageView) findViewById(R.id.mylogo);
+        wheel = findViewById(R.id.mylogo);
         wheel.setOnTouchListener(this);
 
 

@@ -4,13 +4,11 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -24,9 +22,25 @@ import java.util.List;
 
 public class GeofenceTrasitionService extends IntentService {
 
-    private static final int GEOFENCE_NOTIFICATION_ID = 0;
     private static final String TAG = GeofenceTrasitionService.class.getSimpleName();
     private String status = null;
+
+
+    // Convert Task Title to Camel Case
+    private static String toTitleCase(String input) {
+        StringBuilder titleCase = new StringBuilder();
+        boolean nextTitleCase = true;
+        for (char c : input.toCharArray()) {
+            if (Character.isSpaceChar(c)) {
+                nextTitleCase = true;
+            } else if (nextTitleCase) {
+                c = Character.toTitleCase(c);
+                nextTitleCase = false;
+            }
+            titleCase.append(c);
+        }
+        return titleCase.toString();
+    }
 
     public GeofenceTrasitionService() {
         super(TAG);
@@ -89,39 +103,49 @@ public class GeofenceTrasitionService extends IntentService {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void sendNotification(String msg) {
+
+        locationDatabase db = new locationDatabase(this);
+        String title = db.displayTaskName(Integer.parseInt(msg));
+
         Log.i(TAG, "sendNotification: " + msg);
 
-        // Intent to start the main Activity
-        Intent notificationIntent = MainActivity.makeNotificationIntent(
-                getApplicationContext(), msg
-        );
+        // Intent to start the MainActivity - Open Map
+        Intent notificationIntent = new Intent(this,MainActivity.NotificationMgr.class);
+        PendingIntent notificationPendingIntent = PendingIntent.getBroadcast(this,0,notificationIntent,PendingIntent.FLAG_UPDATE_CURRENT);
 
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(notificationIntent);
-        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        // Intent to start the MainActivity - Skip Task
+        Intent notificationSkip = new Intent(this,MainActivity.SkipTask.class);
+        notificationSkip.putExtra("id",msg);
+        PendingIntent markSkip = PendingIntent.getBroadcast(this,0,notificationSkip,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Intent to start the MainActivity - Done Task
+        Intent notificationDone = new Intent(this,MainActivity.MarkDone.class);
+        notificationDone.putExtra("id",msg);
+        PendingIntent markDone = PendingIntent.getBroadcast(this,0,notificationDone,PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-        // Creating and sending Notification
-        NotificationManager notificatioMng =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        assert notificatioMng != null;
-        notificatioMng.notify(
-                GEOFENCE_NOTIFICATION_ID,
-                createNotification(msg, notificationPendingIntent));
-    }
-
-    // Create notification
-    private Notification createNotification(String msg, PendingIntent notificationPendingIntent) {
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
-        notificationBuilder
+        Notification noti = new Notification.Builder(this)
                 .setSmallIcon(R.drawable.frog1)
                 .setColor(Color.RED)
-                .setContentTitle(msg)
+                .setContentTitle(toTitleCase(title))
                 .setContentText("LeapFrog - You are " + status + " nearby!")
+                .addAction(R.drawable.ic_near,  "Map", notificationPendingIntent) // #0
+                .addAction(R.drawable.ic_skip, "Skip", markSkip) // #1
+                .addAction(R.drawable.ic_done, "Done", markDone) // #2
                 .setContentIntent(notificationPendingIntent)
+                .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
-                .setAutoCancel(true);
-        return notificationBuilder.build();
+                .build();
+
+
+
+
+// Get the notification manager system service
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+// mId allows you to update the notification later on.
+        assert mNotificationManager != null;
+        mNotificationManager.notify(0, noti);
+
     }
 }

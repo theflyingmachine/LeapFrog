@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
@@ -15,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service android:name=".GeofenceTrasitionService" />
-
+        <receiver android:name=".MainActivity$NotificationMgr"/>
+        <receiver android:name=".MainActivity$SkipTask"/>
+        <receiver android:name=".MainActivity$MarkDone" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDxQ6Jxth20p4RRY5WCZEjuyQ3i8UVDk3g" />
@@ -33,7 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".task_setting" />
         <activity android:name=".ManageTask" />
         <activity android:name=".MainActivity" />

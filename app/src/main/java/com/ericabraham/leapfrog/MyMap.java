@@ -76,8 +76,8 @@ public class MyMap extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mymap);
-        textLat = (TextView) findViewById(R.id.lat);
-        textLong = (TextView) findViewById(R.id.lon);
+        textLat = findViewById(R.id.lat);
+        textLong = findViewById(R.id.lon);
 
         // initialize GoogleMaps
         initGMaps();
@@ -323,5 +323,4 @@ public class MyMap extends AppCompatActivity
             drawGeofence(rad[i]);
         }
     }
-
 }

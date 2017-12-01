@@ -20,6 +20,7 @@ class locationDatabase extends SQLiteOpenHelper {
     private static final String COLUMN_NAME_DATE = "date";
     private static final String COLUMN_NAME_NAME = "pname";
     private static final String COLUMN_NAME_ADDRESS = "paddress";
+    private static final String COLUMN_NAME_SKIPLIST = "skiplist";
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "leapfrog";
     private int rowCount = 0;
@@ -39,7 +40,8 @@ class locationDatabase extends SQLiteOpenHelper {
                 + COLUMN_NAME_RADIUS + " INTEGER,"//index 5
                 + COLUMN_NAME_DATE + " TEXT,"//index 6
                 + COLUMN_NAME_NAME + " TEXT,"//index 7
-                + COLUMN_NAME_ADDRESS + " TEXT )";//index 8
+                + COLUMN_NAME_ADDRESS + " TEXT,"//index 8
+                + COLUMN_NAME_SKIPLIST + " TEXT )";//index 9
 
         db.execSQL(CREATE_TABLE);
     }
@@ -62,6 +64,7 @@ class locationDatabase extends SQLiteOpenHelper {
         values.put(COLUMN_NAME_DATE, date);
         values.put(COLUMN_NAME_NAME, pname);
         values.put(COLUMN_NAME_ADDRESS, address);
+        values.put(COLUMN_NAME_SKIPLIST, "0");
 
 
         // Inserting Row
@@ -71,6 +74,33 @@ class locationDatabase extends SQLiteOpenHelper {
     }
 
 
+
+//to return the timestamp for checking SkipList
+    public String[] displaySkipList() {
+        String selectQuery = "SELECT * FROM " + TABLE_NAME;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        String timeStamp[]=new String[rowCount];
+        int i = 0;
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                timeStamp[i] = cursor.getString(9);
+                i++;
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return timeStamp;
+    }
+
+    //To update SkipList Timestamp
+    public void updateSkipList(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long savedMillis = System.currentTimeMillis();
+        db.execSQL("UPDATE " + TABLE_NAME + " SET "
+                + COLUMN_NAME_SKIPLIST + " = '" + savedMillis + "'"
+                + " WHERE " + COLUMN_NAME_ID + " = " + id + ";");
+    }
 
 
     public String[] displayLat() {
@@ -86,6 +116,7 @@ class locationDatabase extends SQLiteOpenHelper {
                 i++;
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return lat;
     }
 
@@ -102,6 +133,7 @@ class locationDatabase extends SQLiteOpenHelper {
                 i++;
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return longi;
     }
 
@@ -118,6 +150,7 @@ class locationDatabase extends SQLiteOpenHelper {
                 i++;
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return task;
     }
 
@@ -134,6 +167,7 @@ class locationDatabase extends SQLiteOpenHelper {
                 i++;
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return name;
     }
 
@@ -150,6 +184,7 @@ class locationDatabase extends SQLiteOpenHelper {
                 i++;
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return rad;
     }
 
@@ -167,6 +202,7 @@ class locationDatabase extends SQLiteOpenHelper {
                 i++;
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return date;
     }
 
@@ -184,6 +220,7 @@ class locationDatabase extends SQLiteOpenHelper {
                 i++;
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return add;
     }
 
@@ -201,6 +238,7 @@ class locationDatabase extends SQLiteOpenHelper {
                 i++;
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return id;
     }
 
@@ -216,7 +254,6 @@ class locationDatabase extends SQLiteOpenHelper {
             rad = cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_RADIUS));
         }
         cursor.close();
-
         return rad;
     }
 
@@ -264,6 +301,23 @@ class locationDatabase extends SQLiteOpenHelper {
         long numRows = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
         return rowCount = (int) numRows;
     }
+
+
+
+
+    //get task name by Id
+    public String displayTaskName(int i) {
+        String selectQuery = "SELECT " + COLUMN_NAME_TASK + " FROM " + TABLE_NAME + " WHERE " + COLUMN_NAME_ID + " = " + i;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        String tName = "";
+        if (cursor.moveToFirst()) {
+            tName = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_TASK));
+        }
+        cursor.close();
+        return tName;
+    }
+
 
 }
 

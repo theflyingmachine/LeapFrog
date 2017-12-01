@@ -25,7 +25,7 @@ public class task_setting extends AppCompatActivity {
         setContentView(R.layout.activity_task_setting);
 
         // initiate the date picker and a button
-        date = (EditText) findViewById(R.id.date);
+        date = findViewById(R.id.date);
         date.setKeyListener(null);
         // perform click event on edit text
         date.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +61,7 @@ public class task_setting extends AppCompatActivity {
 
         final locationDatabase db = new locationDatabase(this);
 
-        Button cancel_button = (Button) findViewById(R.id.cancel_button);
+        Button cancel_button = findViewById(R.id.cancel_button);
 
         cancel_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +73,7 @@ public class task_setting extends AppCompatActivity {
         });
 
 
-        Button save_button = (Button) findViewById(R.id.save_button);
+        Button save_button = findViewById(R.id.save_button);
 
         save_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,16 +84,16 @@ public class task_setting extends AppCompatActivity {
                 String address = getIntent().getStringExtra("address");
 
 
-                EditText txtname = (EditText) findViewById(R.id.title_edittext);
+                EditText txtname = findViewById(R.id.title_edittext);
                 String task = txtname.getText().toString();
 
-                EditText todoTxt = (EditText) findViewById(R.id.todo_edittext);
+                EditText todoTxt = findViewById(R.id.todo_edittext);
                 String todo = todoTxt.getText().toString();
 
-                SeekBar rad = (SeekBar) findViewById(R.id.seekBar);
+                SeekBar rad = findViewById(R.id.seekBar);
                 int radius = rad.getProgress();
 
-                EditText datetxt = (EditText) findViewById(R.id.date);
+                EditText datetxt = findViewById(R.id.date);
                 String date = datetxt.getText().toString();
 
 // Validation

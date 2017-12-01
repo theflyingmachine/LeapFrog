@@ -41,7 +41,7 @@
 
         <TextView
             android:id="@+id/lon"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="68dp"
             android:layout_weight="5.33"
             android:gravity="center"
@@ -61,7 +61,7 @@
 
         <TextView
             android:id="@+id/ln"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:gravity="center"

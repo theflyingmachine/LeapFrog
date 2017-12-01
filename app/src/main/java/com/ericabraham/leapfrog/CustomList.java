@@ -32,10 +32,10 @@ class CustomList extends ArrayAdapter<String> {
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         View listViewItem = inflater.inflate(R.layout.list_layout, null, true);
-        TextView textViewTask = (TextView) listViewItem.findViewById(R.id.txttask);
-        TextView textViewName = (TextView) listViewItem.findViewById(R.id.txtname);
-        TextView textViewDate = (TextView) listViewItem.findViewById(R.id.txtdate);
-        TextView textViewAddress = (TextView) listViewItem.findViewById(R.id.txtaddress);
+        TextView textViewTask = listViewItem.findViewById(R.id.txttask);
+        TextView textViewName = listViewItem.findViewById(R.id.txtname);
+        TextView textViewDate = listViewItem.findViewById(R.id.txtdate);
+        TextView textViewAddress = listViewItem.findViewById(R.id.txtaddress);
 
 
 

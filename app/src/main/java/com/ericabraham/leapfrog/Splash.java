@@ -32,7 +32,7 @@ public class Splash extends Activity {
 //set content view AFTER ABOVE sequence (to avoid crash)
         this.setContentView(R.layout.activity_splash);
 
-        ImageView im = (ImageView) findViewById(R.id.imageView);
+        ImageView im = findViewById(R.id.imageView);
         im.setImageResource(R.drawable.splashimg);
 
         /* New Handler to start the Menu-Activity

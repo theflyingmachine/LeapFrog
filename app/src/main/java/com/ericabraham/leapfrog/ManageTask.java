@@ -26,7 +26,7 @@ public class ManageTask extends AppCompatActivity {
         setContentView(R.layout.activity_manage_task);
 
         // initiate the date picker and a button
-        date = (EditText) findViewById(R.id.date);
+        date = findViewById(R.id.date);
         date.setKeyListener(null);
 
         // perform click event on edit text
@@ -68,11 +68,11 @@ public class ManageTask extends AppCompatActivity {
 
         final locationDatabase db = new locationDatabase(this);
 
-        final TextView title = (TextView) findViewById(R.id.title_edittext);
-        final SeekBar radius = (SeekBar) findViewById(R.id.seekBar);
-        final TextView date = (TextView) findViewById(R.id.date);
-        final TextView todo = (TextView) findViewById(R.id.todo_edittext);
-        TextView tid = (TextView) findViewById(R.id.taskid);
+        final TextView title = findViewById(R.id.title_edittext);
+        final SeekBar radius = findViewById(R.id.seekBar);
+        final TextView date = findViewById(R.id.date);
+        final TextView todo = findViewById(R.id.todo_edittext);
+        TextView tid = findViewById(R.id.taskid);
 
 
         String[] taskData = db.displayTask(id);
@@ -86,7 +86,7 @@ public class ManageTask extends AppCompatActivity {
         idno = Integer.valueOf(taskData[3]);
 
 
-        Button del_button = (Button) findViewById(R.id.del_button);
+        Button del_button = findViewById(R.id.del_button);
 
         del_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +98,7 @@ public class ManageTask extends AppCompatActivity {
         });
 
 
-        Button update_button = (Button) findViewById(R.id.update_button);
+        Button update_button = findViewById(R.id.update_button);
 
         update_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +131,6 @@ public class ManageTask extends AppCompatActivity {
     }
 
     private void returnToMain() {
-        //Toast.makeText(getApplicationContext(),"Ahhh... Done..!! ",Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
