@@ -1,5 +1,6 @@
 package com.ericabraham.leapfrog;
 
+import android.annotation.TargetApi;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -101,6 +102,7 @@ public class GeofenceTrasitionService extends IntentService {
         return TextUtils.join(", ", triggeringGeofencesList);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void sendNotification(String msg) {
 
@@ -135,10 +137,8 @@ public class GeofenceTrasitionService extends IntentService {
                 .setContentIntent(notificationPendingIntent)
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
+                .setPriority(Notification.PRIORITY_MAX )
                 .build();
-
-
-
 
 // Get the notification manager system service
         NotificationManager mNotificationManager =
