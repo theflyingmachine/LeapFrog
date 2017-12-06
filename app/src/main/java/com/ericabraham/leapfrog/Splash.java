@@ -10,6 +10,7 @@ import android.support.annotation.RequiresApi;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
 import java.util.Date;
 
 public class Splash extends Activity {
