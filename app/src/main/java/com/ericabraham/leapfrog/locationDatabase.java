@@ -74,13 +74,12 @@ class locationDatabase extends SQLiteOpenHelper {
     }
 
 
-
-//to return the timestamp for checking SkipList
+    //to return the timestamp for checking SkipList
     public String[] displaySkipList() {
         String selectQuery = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        String timeStamp[]=new String[rowCount];
+        String timeStamp[] = new String[rowCount];
         int i = 0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -243,7 +242,6 @@ class locationDatabase extends SQLiteOpenHelper {
     }
 
 
-
     //get radius
     public int displayRadius(int i) {
         String selectQuery = "SELECT " + COLUMN_NAME_RADIUS + " FROM " + TABLE_NAME + " WHERE " + COLUMN_NAME_ID + " = " + i;
@@ -301,8 +299,6 @@ class locationDatabase extends SQLiteOpenHelper {
         long numRows = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
         return rowCount = (int) numRows;
     }
-
-
 
 
     //get task name by Id

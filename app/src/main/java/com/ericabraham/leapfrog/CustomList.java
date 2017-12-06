@@ -38,7 +38,6 @@ class CustomList extends ArrayAdapter<String> {
         TextView textViewAddress = listViewItem.findViewById(R.id.txtaddress);
 
 
-
         textViewTask.setText(task[position]);
         textViewName.setText(pname[position]);
         textViewDate.setText(date[position]);
