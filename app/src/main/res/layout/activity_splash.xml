@@ -9,8 +9,9 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="match_parent"
+        android:scaleType="fitXY"
         app:srcCompat="@drawable/splashimg"
         tools:layout_editor_absoluteX="44dp"
         tools:layout_editor_absoluteY="16dp"
