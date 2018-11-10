@@ -13,8 +13,7 @@
         android:scrollbars="vertical"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="0dp"
-        tools:ignore="MissingConstraints"
-        >
+        tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:id="@+id/linear_layout"
@@ -87,7 +86,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    android:inputType="datetime"
+                    android:inputType="none"
                     android:focusable="true"
                     android:textSize="20sp" />
 
@@ -156,7 +155,8 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:text="Task ID:" />
+                    android:text="" />
+
 
                 <TextView
                     android:id="@+id/taskid"
@@ -165,7 +165,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_toEndOf="@+id/textView2"
                     android:layout_toRightOf="@+id/textView2"
-                    android:text="ID" />
+                    android:text="" />
 
 
             </RelativeLayout>
