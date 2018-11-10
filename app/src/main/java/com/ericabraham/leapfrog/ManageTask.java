@@ -82,7 +82,7 @@ public class ManageTask extends AppCompatActivity {
         radius.setProgress(raduisData);
         date.setText(taskData[1]);
         todo.setText(taskData[2]);
-        tid.setText(taskData[3]);
+//        tid.setText(taskData[3]);
         idno = Integer.valueOf(taskData[3]);
 
 
