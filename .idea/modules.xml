@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/LeapFrog.iml" filepath="$PROJECT_DIR$/LeapFrog.iml" />
-      <module fileurl="file://C:\Users\EK055891\Documents\LeapFrog\LeapFrog.iml" filepath="C:\Users\EK055891\Documents\LeapFrog\LeapFrog.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\EK055891\Documents\LeapFrog\app\app.iml" filepath="C:\Users\EK055891\Documents\LeapFrog\app\app.iml" />
     </modules>
   </component>
 </project>
