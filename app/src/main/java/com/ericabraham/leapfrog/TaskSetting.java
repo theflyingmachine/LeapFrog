@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -14,11 +15,10 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 
-public class TaskSetting extends AppCompatActivity {
+public class task_setting extends AppCompatActivity {
 
     private EditText date;
     private DatePickerDialog datePickerDialog;
-    private static final String TAG = "TaskSetting";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,18 +29,51 @@ public class TaskSetting extends AppCompatActivity {
         date = findViewById(R.id.date);
         date.setKeyListener(null);
         // perform click event on edit text
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // calender class's instance and get current date , month and year from calender
+                final Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR); // current year
+                int mMonth = c.get(Calendar.MONTH); // current month
+                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
 
-        date.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    onDatePickerDialog();
-                }
+
+                // date picker dialog
+                datePickerDialog = new DatePickerDialog(task_setting.this,
+                        new DatePickerDialog.OnDateSetListener() {
+
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // set day of month , month and year value in the edit text
+
+                                final String[] MONTHS = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+                                String mon = MONTHS[monthOfYear];
+                                date.setText(mon + " " + dayOfMonth + ", " + year);
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.show();
             }
         });
 
-        date.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                onDatePickerDialog();
+
+        //        //Check for never expires box
+        CheckBox chk = (CheckBox) findViewById(R.id.ne);
+        chk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                // Check which checkbox was clicked
+                if (checked){
+                    date.setText("January 19, 2038");
+                    date.setEnabled(false);   // Do your coding
+                }
+                else{
+                    date.setEnabled(true);  // Do your coding
+                }
             }
         });
 
@@ -81,7 +114,7 @@ public class TaskSetting extends AppCompatActivity {
                 EditText datetxt = findViewById(R.id.date);
                 String date = datetxt.getText().toString();
 
-                // Validation
+// Validation
                 if (task.equals("")) {
                     Toast.makeText(getApplicationContext(), "Awww... Pleas give me a TITLE.", Toast.LENGTH_SHORT).show();
                     return;
@@ -111,34 +144,6 @@ public class TaskSetting extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         this.finish();
-    }
-
-    private void onDatePickerDialog(){
-        Utils.hideKeyboard(this);
-        final Calendar c = Calendar.getInstance();
-        int mYear = c.get(Calendar.YEAR); // current year
-        int mMonth = c.get(Calendar.MONTH); // current month
-        int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
-
-        // date picker dialog
-        datePickerDialog = new DatePickerDialog(TaskSetting.this,
-            new DatePickerDialog.OnDateSetListener() {
-
-                @Override
-                public void onDateSet(DatePicker view, int year,
-                    int monthOfYear, int dayOfMonth) {
-                    // set day of month , month and year value in the edit text
-
-                    final String[] MONTHS = {
-                        "January", "February", "March", "April", "May", "June", "July", "August",
-                        "September", "October", "November", "December"
-                    };
-                    String mon = MONTHS[monthOfYear];
-                    date.setText(mon + " " + dayOfMonth + ", " + year);
-                }
-            }, mYear, mMonth, mDay);
-        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-        datePickerDialog.show();
     }
 
     private void saveOkStatus() {
