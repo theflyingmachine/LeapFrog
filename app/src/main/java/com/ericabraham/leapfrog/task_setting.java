@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -58,6 +59,23 @@ public class task_setting extends AppCompatActivity {
             }
         });
 
+
+        //        //Check for never expires box
+        CheckBox chk = (CheckBox) findViewById(R.id.ne);
+        chk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                // Check which checkbox was clicked
+                if (checked){
+                    date.setText("January 19, 2038");
+                    date.setEnabled(false);   // Do your coding
+                }
+                else{
+                    date.setEnabled(true);  // Do your coding
+                }
+            }
+        });
 
         final locationDatabase db = new locationDatabase(this);
 

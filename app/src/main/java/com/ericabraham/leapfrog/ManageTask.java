@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -28,8 +29,27 @@ public class ManageTask extends AppCompatActivity {
         // initiate the date picker and a button
         date = findViewById(R.id.date);
         date.setKeyListener(null);
+        CheckBox chk = (CheckBox) findViewById(R.id.ne);
 
-        // perform click event on edit text
+
+        //Check for never expires box
+        chk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                // Check which checkbox was clicked
+                if (checked){
+                    date.setText("January 19, 2038");
+                    date.setEnabled(false);   // Do your coding
+                }
+                else{
+                    date.setEnabled(true);  // Do your coding
+                }
+            }
+        });
+
+
+            // perform click event on edit text
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +81,7 @@ public class ManageTask extends AppCompatActivity {
         });
 
 
+
         String i = getIntent().getStringExtra("idName");
         int id = Integer.parseInt(i);
         //   Toast.makeText(getApplicationContext(),"Ahhh..I am Manage Task, i got: " +i ,Toast.LENGTH_SHORT).show();
@@ -75,6 +96,9 @@ public class ManageTask extends AppCompatActivity {
         TextView tid = findViewById(R.id.taskid);
 
 
+
+
+
         String[] taskData = db.displayTask(id);
         int raduisData = db.displayRadius(id);
 
@@ -85,6 +109,15 @@ public class ManageTask extends AppCompatActivity {
 //        tid.setText(taskData[3]);
         idno = Integer.valueOf(taskData[3]);
 
+
+        //checkbox is checked and date disabled if date is end of calender
+        if (taskData[1].equals("January 19, 2038")) {
+            //disable the datebox and make checkbox checked
+            //Toast.makeText(getApplicationContext(),"Infinate Date" ,Toast.LENGTH_SHORT).show();
+            chk.setChecked(true);
+            date.setEnabled(false);
+
+        }
 
         Button del_button = findViewById(R.id.del_button);
 
