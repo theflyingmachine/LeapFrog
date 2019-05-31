@@ -1,4 +1,4 @@
-package com.ericabraham.leapfrog;
+package com.ericabraham.leapfrog.Ui;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -9,30 +9,32 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ericabraham.leapfrog.R;
+import com.ericabraham.leapfrog.Utils.Utils;
+import com.ericabraham.leapfrog.Database.locationDatabase;
 import java.util.Calendar;
 
-public class ManageTask extends AppCompatActivity {
+
+public class TaskSetting extends AppCompatActivity {
 
     private EditText date;
     private DatePickerDialog datePickerDialog;
-    private int idno;
+    private static final String TAG = "TaskSetting";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manage_task);
+        setContentView(R.layout.activity_task_setting);
 
         // initiate the date picker and a button
         date = findViewById(R.id.date);
         date.setKeyListener(null);
-
         // perform click event on edit text
+
         date.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override public void onFocusChange(View v, boolean hasFocus) {
-                // calender class's instance and get current date , month and year from calender
                 if (hasFocus) {
                     onDatePickerDialog();
                 }
@@ -45,74 +47,73 @@ public class ManageTask extends AppCompatActivity {
             }
         });
 
-
-        String i = getIntent().getStringExtra("idName");
-        int id = Integer.parseInt(i);
-        //   Toast.makeText(getApplicationContext(),"Ahhh..I am Manage Task, i got: " +i ,Toast.LENGTH_SHORT).show();
-
-
         final locationDatabase db = new locationDatabase(this);
 
-        final TextView title = findViewById(R.id.title_edittext);
-        final SeekBar radius = findViewById(R.id.seekBar);
-        final TextView date = findViewById(R.id.date);
-        final TextView todo = findViewById(R.id.todo_edittext);
-        TextView tid = findViewById(R.id.taskid);
+        Button cancel_button = findViewById(R.id.cancel_button);
 
-
-        String[] taskData = db.displayTask(id);
-        int raduisData = db.displayRadius(id);
-
-        title.setText(taskData[0]);
-        radius.setProgress(raduisData);
-        date.setText(taskData[1]);
-        todo.setText(taskData[2]);
-        tid.setText(taskData[3]);
-        idno = Integer.valueOf(taskData[3]);
-
-
-        Button del_button = findViewById(R.id.del_button);
-
-        del_button.setOnClickListener(new View.OnClickListener() {
+        cancel_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.delTask(idno);
-                Toast.makeText(getApplicationContext(), "Your Task is Deleted" + idno, Toast.LENGTH_SHORT).show();
-                returnToMain();
+
+                //   finish();
+                saveNoStatus();
             }
         });
 
 
-        Button update_button = findViewById(R.id.update_button);
+        Button save_button = findViewById(R.id.save_button);
 
-        update_button.setOnClickListener(new View.OnClickListener() {
+        save_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String utask = title.getText().toString();
-                String utodo = todo.getText().toString();
-                int uradius = radius.getProgress();
-                //      Integer.parseInt(date.getText().toString());
-                String udate = date.getText().toString();
+                String latitude = getIntent().getStringExtra("lat");
+                String longitude = getIntent().getStringExtra("longi");
+                String pname = getIntent().getStringExtra("pname");
+                String address = getIntent().getStringExtra("address");
 
-// Validation
-                if (utask.equals("")) {
+
+                EditText txtname = findViewById(R.id.title_edittext);
+                String task = txtname.getText().toString();
+
+                EditText todoTxt = findViewById(R.id.todo_edittext);
+                String todo = todoTxt.getText().toString();
+
+                SeekBar rad = findViewById(R.id.seekBar);
+                int radius = rad.getProgress();
+
+                EditText datetxt = findViewById(R.id.date);
+                String date = datetxt.getText().toString();
+
+                // Validation
+                if (task.equals("")) {
                     Toast.makeText(getApplicationContext(), "Awww... Pleas give me a TITLE.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (udate.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Awww... Do i have a DATE?.", Toast.LENGTH_SHORT).show();
+                if (date.equals("")) {
+                    Toast.makeText(getApplicationContext(), "Awww... do i have a DATE?.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (utodo.equals("")) {
+
+                if (todo.equals("")) {
                     Toast.makeText(getApplicationContext(), "Awww... I can not remind NOTHING.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+                db.insertLocation(latitude, longitude, task, todo, radius, date, pname, address);
+                saveOkStatus();
 
-                db.updateTask(idno, utask, utodo, uradius, udate);
-                returnToMain();
+
             }
         });
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 
     private void onDatePickerDialog(){
@@ -123,7 +124,7 @@ public class ManageTask extends AppCompatActivity {
         int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
 
         // date picker dialog
-        datePickerDialog = new DatePickerDialog(ManageTask.this,
+        datePickerDialog = new DatePickerDialog(TaskSetting.this,
             new DatePickerDialog.OnDateSetListener() {
 
                 @Override
@@ -143,15 +144,15 @@ public class ManageTask extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void returnToMain() {
+    private void saveOkStatus() {
+        Toast.makeText(getApplicationContext(), "Ahhh... Saved!! ", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    private void saveNoStatus() {
+        Toast.makeText(getApplicationContext(), "Ahhh... NOT SAVED!! ", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         this.finish();

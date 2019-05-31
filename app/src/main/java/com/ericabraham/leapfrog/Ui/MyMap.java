@@ -1,4 +1,4 @@
-package com.ericabraham.leapfrog;
+package com.ericabraham.leapfrog.Ui;
 
 import android.Manifest;
 import android.content.Intent;
@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ericabraham.leapfrog.Database.locationDatabase;
+import com.ericabraham.leapfrog.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;

@@ -1,4 +1,4 @@
-package com.ericabraham.leapfrog;
+package com.ericabraham.leapfrog.Ui;
 
 import android.annotation.TargetApi;
 import android.app.IntentService;
@@ -10,17 +10,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.text.TextUtils;
 import android.util.Log;
 
+import com.ericabraham.leapfrog.Database.locationDatabase;
+import com.ericabraham.leapfrog.R;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingEvent;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -130,6 +128,7 @@ public class GeofenceTrasitionService extends IntentService {
 
         // Intent to start the MainActivity - Open Map
         Intent notificationIntent = new Intent(this, MainActivity.NotificationMgr.class);
+        notificationIntent.putExtra("id", id);
         PendingIntent notificationPendingIntent =
             PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 

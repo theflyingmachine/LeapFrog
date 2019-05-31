@@ -1,4 +1,4 @@
-package com.ericabraham.leapfrog;
+package com.ericabraham.leapfrog.Utils;
 
 import android.app.Activity;
 import android.view.View;

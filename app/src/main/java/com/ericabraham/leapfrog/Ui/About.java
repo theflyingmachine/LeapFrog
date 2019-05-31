@@ -1,4 +1,4 @@
-package com.ericabraham.leapfrog;
+package com.ericabraham.leapfrog.Ui;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -13,6 +13,9 @@ import android.view.View.OnTouchListener;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.Toast;
+import com.ericabraham.leapfrog.R;
+import com.ericabraham.leapfrog.Ui.MainActivity;
+import com.ericabraham.leapfrog.Ui.MyMap;
 
 public class About extends AppCompatActivity implements OnTouchListener {
     private ImageView wheel;
