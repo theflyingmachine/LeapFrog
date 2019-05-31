@@ -188,6 +188,14 @@ public class MyMap extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        map.setMyLocationEnabled(true);
+        map.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
+            @Override public void onMyLocationClick(@NonNull Location location) {
+                float zoom = 14f;
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), zoom);
+                map.animateCamera(cameraUpdate);
+            }
+        });
     }
 
     @Override
@@ -240,6 +248,9 @@ public class MyMap extends AppCompatActivity
     private void getLastKnownLocation() {
         if (checkPermission()) {
             lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+            float zoom = 14f;
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), zoom);
+            map.animateCamera(cameraUpdate);
             if (lastLocation != null) {
                 writeLastLocation();
                 startLocationUpdates();
@@ -253,7 +264,7 @@ public class MyMap extends AppCompatActivity
         textLat.setText("Lat: " + location.getLatitude());
         textLong.setText("Long: " + location.getLongitude());
 
-        markerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+        //markerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
     }
 
     private void writeLastLocation() {
@@ -269,9 +280,6 @@ public class MyMap extends AppCompatActivity
             if (locationMarker != null)
                 locationMarker.remove();
             locationMarker = map.addMarker(markerOptions);
-            float zoom = 14f;
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
-            map.animateCamera(cameraUpdate);
         }
     }
 
@@ -284,7 +292,6 @@ public class MyMap extends AppCompatActivity
                 .title(title);
         if (map != null) {
             geoFenceMarker = map.addMarker(markerOptions);
-
         }
     }
 
