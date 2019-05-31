@@ -45,6 +45,8 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
+import static com.google.android.gms.location.LocationServices.GeofencingApi;
+
 /* Use this to get SHA1 Key using CMD in Windows
 * keytool -list -v -keystore "%USERPROFILE%\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
 */
@@ -57,17 +59,17 @@ public class MainActivity extends AppCompatActivity implements
         ResultCallback<Status> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static Context mContext;
     //Everything needed for the background service (GEOFENCING) is beyond this point
     private final int REQ_PERMISSION = 999;
-    private static Context mContext;
+    //    protected ArrayList<Geofence> mGeofenceList;
+    private final int PLACE_PICKER_REQUEST = 1;
     private boolean switchState;
     private boolean monState;
     private Switch pushBtn;
     private GoogleApiClient mGoogleApiClient;
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
-    //    protected ArrayList<Geofence> mGeofenceList;
-    private final int PLACE_PICKER_REQUEST = 1;
     private FloatingActionButton fabPickPlace;
     // Call for the service
     private PendingIntent geoFencePendingIntent;
@@ -401,15 +403,15 @@ public class MainActivity extends AppCompatActivity implements
             // TODO calculation for 24 HRS to be used in PROD environment- 24 * 60 * 60 * 1000
             // Check if skip time has elapsed
             if (System.currentTimeMillis() >= prev + 60 * 1000) {
-            double lat = Double.parseDouble(mlat[i]);
-            double lon = Double.parseDouble(mlong[i]);
-            int radius = rad[i];
-            String taskId = Integer.toString(id[i]);
-            LatLng latLng = new LatLng(lat, lon);
-            Geofence geofence = createGeofence(latLng, radius, taskId);
-            GeofencingRequest geofenceRequest = createGeofenceRequest(geofence);
-            addGeofence(geofenceRequest);
-             }
+                double lat = Double.parseDouble(mlat[i]);
+                double lon = Double.parseDouble(mlong[i]);
+                int radius = rad[i];
+                String taskId = Integer.toString(id[i]);
+                LatLng latLng = new LatLng(lat, lon);
+                Geofence geofence = createGeofence(latLng, radius, taskId);
+                GeofencingRequest geofenceRequest = createGeofenceRequest(geofence);
+                addGeofence(geofenceRequest);
+            }
         }
     }
 
@@ -440,7 +442,7 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "addGeofence");
         if (checkPermission())
             Log.d(TAG, "addGeofence");
-        LocationServices.GeofencingApi.addGeofences(
+        GeofencingApi.addGeofences(
                 googleApiClient,
                 request,
                 createGeofencePendingIntent()
@@ -472,7 +474,7 @@ public class MainActivity extends AppCompatActivity implements
     // Clear Geofence
     private void clearGeofence() {
         Log.d(TAG, "clearGeofence()");
-        LocationServices.GeofencingApi.removeGeofences(
+        GeofencingApi.removeGeofences(
                 googleApiClient,
                 createGeofencePendingIntent()
         ).setResultCallback(new ResultCallback<Status>() {
@@ -491,66 +493,67 @@ public class MainActivity extends AppCompatActivity implements
 //THIS IS A NOTIFICATION BROADCAST RECEIVER SEGMENT
 //-------------------------------------------------
 
-//Open Map
-public static class NotificationMgr extends BroadcastReceiver {
-    public NotificationMgr() {
+    //Open Map
+    public static class NotificationMgr extends BroadcastReceiver {
+        public NotificationMgr() {
+        }
 
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
+        @Override
+        public void onReceive(Context context, Intent intent) {
             Intent myMap = new Intent(mContext, MyMap.class);
             myMap.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mContext.startActivity(myMap);
-        //This is used to close the notification tray
-        Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        context.sendBroadcast(it);
-        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        assert notificationManager != null;
-        notificationManager.cancel(0);
-    }
-}
-
-
-//Skip Task
-public static class SkipTask extends BroadcastReceiver {
-    public SkipTask() {
+            //This is used to close the notification tray
+            Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+            context.sendBroadcast(it);
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            assert notificationManager != null;
+            notificationManager.cancel(0);
+        }
     }
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
+
+    //Skip Task
+    public static class SkipTask extends BroadcastReceiver {
+        public SkipTask() {
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        public void onReceive(Context context, Intent intent) {
             String id = intent.getStringExtra("id");
             locationDatabase db = new locationDatabase(context);
             db.updateSkipList(Integer.parseInt(id));
-        //This is used to close the notification tray
-        Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        context.sendBroadcast(it);
-        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        assert notificationManager != null;
-        notificationManager.cancel(0);
-    }
-}
-
-
-//Mark Done
-public static class MarkDone extends BroadcastReceiver {
-    public MarkDone() {
+            //This is used to close the notification tray
+            Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+            context.sendBroadcast(it);
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            assert notificationManager != null;
+            notificationManager.cancel(0);
+        }
     }
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        String id = intent.getStringExtra("id");
+
+    //Mark Done
+    public static class MarkDone extends BroadcastReceiver {
+        public MarkDone() {
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String id = intent.getStringExtra("id");
             locationDatabase db = new locationDatabase(context);
             db.delTask(Integer.parseInt(id));
             Toast.makeText(context, "Task marked as Done ", Toast.LENGTH_SHORT).show();
-        //This is used to close the notification tray
-        Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        context.sendBroadcast(it);
-        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        assert notificationManager != null;
-        notificationManager.cancel(0);
+            //This is used to close the notification tray
+            Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+            context.sendBroadcast(it);
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            assert notificationManager != null;
+            notificationManager.cancel(0);
+        }
     }
-}
 
 }
 
