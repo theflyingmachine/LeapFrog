@@ -39,7 +39,7 @@
       </intent-filter>
     </activity>
     <activity
-        android:name=".task_setting"
+        android:name=".TaskSetting"
         android:screenOrientation="portrait"/>
     <activity
         android:name=".ManageTask"

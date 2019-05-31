@@ -12,7 +12,9 @@
         android:fillViewport="true"
         android:scrollbars="vertical"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="0dp">
+        tools:layout_editor_absoluteY="0dp"
+        tools:ignore="MissingConstraints"
+        >
 
         <LinearLayout
             android:id="@+id/linear_layout"
@@ -85,7 +87,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    android:inputType="none"
+                    android:inputType="datetime"
                     android:focusable="true"
                     android:textSize="20sp" />
 

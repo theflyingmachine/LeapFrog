@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements
                 String latitude = String.valueOf(place.getLatLng().latitude);
                 String longitude = String.valueOf(place.getLatLng().longitude);
                 String address = String.format("%s", place.getAddress());
-                taskSetting(latitude, longitude, placename, address);
+                addNewReminder(latitude, longitude, placename, address);
             }
         }
     }
@@ -204,8 +204,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     //calling add new remnder activity with Lat, Long, name and address
-    private void taskSetting(String lat, String longi, String pname, String address) {
-        Intent intent = new Intent(this, task_setting.class);
+    private void addNewReminder(String lat, String longi, String pname, String address) {
+        Intent intent = new Intent(this, TaskSetting.class);
         intent.putExtra("lat", lat);
         intent.putExtra("longi", longi);
         intent.putExtra("pname", pname);

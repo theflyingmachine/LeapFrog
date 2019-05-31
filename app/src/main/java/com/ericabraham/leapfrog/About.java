@@ -18,6 +18,7 @@ public class About extends AppCompatActivity implements OnTouchListener {
     private ImageView wheel;
     private double mCurrAngle = 0;
     private boolean touched = true;
+    private MediaPlayer mPlayer;
 
 
     @Override
@@ -32,6 +33,7 @@ public class About extends AppCompatActivity implements OnTouchListener {
 
         Toast.makeText(this, "Do NOT touch LeapFrog logo", Toast.LENGTH_SHORT).show();
 
+        mPlayer = MediaPlayer.create(this, R.raw.about_wouble); // in 2nd param u have to pass your desire ringtone
 
     }
 
@@ -101,8 +103,9 @@ public class About extends AppCompatActivity implements OnTouchListener {
     }
 
     private void animate(double fromDegrees, double toDegrees) {
-        MediaPlayer mPlayer = MediaPlayer.create(this, R.raw.about_wouble); // in 2nd param u have to pass your desire ringtone
-        mPlayer.start();
+        if (!mPlayer.isPlaying()) {
+            mPlayer.start();
+        }
         final RotateAnimation rotate = new RotateAnimation((float) fromDegrees, (float) toDegrees,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f);
