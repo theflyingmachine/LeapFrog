@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="12dp"
                 android:layout_marginTop="12dp"
-                android:text="Radius"
+                android:text="Radius (0-1 KM)"
                 android:textColor="#000"
                 android:textSize="@dimen/abc_action_bar_content_inset_material"
                 android:textStyle="bold"
@@ -82,8 +82,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
+                android:inputType="datetime"
                 android:focusable="true"
-                android:inputType="none"
                 android:textSize="20sp" />
 
             <TextView
@@ -114,25 +114,33 @@
             android:layout_height="103dp"
             android:padding="15dp">
 
-
-            <Button
-                android:id="@+id/cancel_button"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="35dp"
-                android:text="Cancel" />
+                android:orientation="horizontal">
 
 
-            <Button
-                android:id="@+id/save_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="35dp"
-                android:text="save" />
+                <Button
+                    android:id="@+id/save_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Save"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="50dp" />
+
+                <Button
+                    android:id="@+id/cancel_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:text="Cancel"
+                    android:layout_marginLeft="50dp" />
+
+
+
+
+            </RelativeLayout>
 
         </RelativeLayout>
 

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="5dp"
+    android:layout_margin="5dp">
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="5dp"
+      >
+
+  <TextView
+      android:id="@+id/txttask"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="task name"
+      android:textAppearance="@style/TextAppearance.AppCompat.Button"
+      />
+
+
+  <TextView
+      android:id="@+id/txtdate"
+      android:layout_width="wrap_content"
+      android:layout_height="28dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_below="@id/txttask"
+      android:layout_gravity="right"
+      android:text="date"
+      />
+
+  <TextView
+      android:id="@+id/txtname"
+      android:layout_width="wrap_content"
+      android:layout_height="27dp"
+      android:layout_below="@id/txttask"
+      android:text="pname"
+      />
+
+  <TextView
+      android:id="@+id/txtaddress"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/txtname"
+      android:text="Address"
+      />
+  </RelativeLayout>
+
+</android.support.v7.widget.CardView>

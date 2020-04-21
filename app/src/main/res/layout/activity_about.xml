@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.ericabraham.leapfrog.MyMap">
+    tools:context="com.ericabraham.leapfrog.Ui.MyMap">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,22 +51,49 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="5dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:paddingTop="5dp">
 
-
         <TextView
-            android:id="@+id/ln"
+            android:id="@+id/version"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:gravity="center"
-            android:text="Location Based Reminder"
+            android:text="Location based reminder\nversion" />
+    </LinearLayout>
+
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/company"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Cyberboy Inc"
             android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+        <TextView
+            android:id="@+id/website"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#3373FF"
+            android:text="https://cyberboy.in"/>
+
     </LinearLayout>
 
 
