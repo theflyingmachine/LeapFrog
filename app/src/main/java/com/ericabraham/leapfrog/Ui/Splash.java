@@ -67,32 +67,34 @@ public class Splash extends Activity {
         String monthToNumStr = "";
         int monthToNum;
         for (int i = 0; i < count; i++) {
-            String[] splitDate = dateStr[i].split("\\s+");
-            String month = splitDate[0];
-            String date = splitDate[1].substring(0, splitDate[1].length() - 1);
-            if (Integer.parseInt(date) < 10) date = "0" + date;
-            String year = splitDate[2];
-            final String[] MONTHS = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-            for (int j = 0; j < 12; j++) {
-                if (month.equals(MONTHS[j])) {
-                    monthToNum = j + 1;
-                    if (monthToNum < 10) {
-                        monthToNumStr = Integer.toString(monthToNum);
-                        monthToNumStr = "0" + monthToNumStr;
-                    } else {
-                        monthToNumStr = Integer.toString(monthToNum);
+            if (!dateStr[i].equals("Never Expires")) {
+                String[] splitDate = dateStr[i].split("\\s+");
+                String month = splitDate[0];
+                String date = splitDate[1].substring(0, splitDate[1].length() - 1);
+                if (Integer.parseInt(date) < 10) date = "0" + date;
+                String year = splitDate[2];
+                final String[] MONTHS = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+                for (int j = 0; j < 12; j++) {
+                    if (month.equals(MONTHS[j])) {
+                        monthToNum = j + 1;
+                        if (monthToNum < 10) {
+                            monthToNumStr = Integer.toString(monthToNum);
+                            monthToNumStr = "0" + monthToNumStr;
+                        } else {
+                            monthToNumStr = Integer.toString(monthToNum);
+                        }
+                        break;
                     }
-                    break;
                 }
+                String conStrDate = monthToNumStr + "/" + date + "/" + year + " 23:59:59";
+
+                //create date object
+                Date current = new Date();
+                Date prev = new Date(conStrDate);
+                //compare both dates
+                if (prev.before(current)) db.delTask(id[i]);
             }
-            String conStrDate = monthToNumStr + "/" + date + "/" + year + " 23:59:59";
-            //create date object
-            Date current = new Date();
-            Date prev = new Date(conStrDate);
-            //compare both dates
-            if (prev.before(current)) db.delTask(id[i]);
         }
     }
-
 
 }

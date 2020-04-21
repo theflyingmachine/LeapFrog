@@ -3,9 +3,11 @@ package com.ericabraham.leapfrog.Ui;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -31,8 +33,28 @@ public class ManageTask extends AppCompatActivity {
         // initiate the date picker and a button
         date = findViewById(R.id.date);
         date.setKeyListener(null);
+        CheckBox chk = (CheckBox) findViewById(R.id.ne);
+
 
         // perform click event on edit text
+
+        //Check for never expires box
+        chk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                // Check which checkbox was clicked
+                if (checked){
+                    date.setText("Never Expires");
+                    date.setEnabled(false);   // Do your coding
+                }
+                else{
+                    date.setEnabled(true);  // Do your coding
+                    date.setText("");
+                }
+            }
+        });
+
         date.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override public void onFocusChange(View v, boolean hasFocus) {
                 // calender class's instance and get current date , month and year from calender
@@ -71,14 +93,23 @@ public class ManageTask extends AppCompatActivity {
         tid.setText(taskData[3]);
         idno = Integer.valueOf(taskData[3]);
 
+        //checkbox is checked and date disabled if date is end of calender
+        if (taskData[1].equals("Never Expires")) {
+            //disable the datebox and make checkbox checked
+            //Toast.makeText(getApplicationContext(),"Infinate Date" ,Toast.LENGTH_SHORT).show();
+            chk.setChecked(true);
+            date.setEnabled(false);
 
+
+        }
         Button del_button = findViewById(R.id.del_button);
 
         del_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 db.delTask(idno);
-                Toast.makeText(getApplicationContext(), "Your Task is Deleted" + idno, Toast.LENGTH_SHORT).show();
+//                Snackbar.make(view, "Your Task is Deleted", Snackbar.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Task Deleted" ,Toast.LENGTH_SHORT).show();
                 returnToMain();
             }
         });
@@ -97,20 +128,21 @@ public class ManageTask extends AppCompatActivity {
 
                 // Validation
                 if (utask.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Awww... Pleas give me a TITLE.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(view, "Please Enter Title", Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 if (udate.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Awww... Do i have a DATE?.", Toast.LENGTH_SHORT).show();
+                   Snackbar.make(view, "Please Enter Date", Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 if (utodo.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Awww... I can not remind NOTHING.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(view, "Please Enter Description", Snackbar.LENGTH_LONG).show();
                     return;
                 }
 
 
                 db.updateTask(idno, utask, utodo, uradius, udate);
+                Toast.makeText(getApplicationContext(),"Task Updated" ,Toast.LENGTH_SHORT).show();
                 returnToMain();
             }
         });
@@ -157,6 +189,5 @@ public class ManageTask extends AppCompatActivity {
         startActivity(intent);
         this.finish();
     }
-
 
 }

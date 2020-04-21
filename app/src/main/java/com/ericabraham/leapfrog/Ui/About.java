@@ -2,6 +2,7 @@ package com.ericabraham.leapfrog.Ui;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -12,17 +13,17 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.TextView;
+import com.ericabraham.leapfrog.BuildConfig;
 import com.ericabraham.leapfrog.R;
-import com.ericabraham.leapfrog.Ui.MainActivity;
-import com.ericabraham.leapfrog.Ui.MyMap;
 
 public class About extends AppCompatActivity implements OnTouchListener {
     private ImageView wheel;
     private double mCurrAngle = 0;
     private boolean touched = true;
     private MediaPlayer mPlayer;
-
+    private TextView version;
+    private TextView website;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +34,21 @@ public class About extends AppCompatActivity implements OnTouchListener {
         wheel = findViewById(R.id.mylogo);
         wheel.setOnTouchListener(this);
 
+        version = findViewById(R.id.version);
+        website = findViewById(R.id.website);
+        version.setText("Location Based Reminder\n" + BuildConfig.VERSION_NAME);
 
-        Toast.makeText(this, "Do NOT touch LeapFrog logo", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Do NOT touch LeapFrog logo", Toast.LENGTH_SHORT).show();
 
         mPlayer = MediaPlayer.create(this, R.raw.about_wouble); // in 2nd param u have to pass your desire ringtone
+        website.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://cyberboy.in"));
+                startActivity(browserIntent);
 
+            }
+        });
     }
 
     // Generating Menu
@@ -76,7 +87,7 @@ public class About extends AppCompatActivity implements OnTouchListener {
         final float y = event.getY();
 
         if (touched) {
-            Toast.makeText(this, "Aaawwww... You did it..", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Aaawwww... You did it! Stay Curious.", Toast.LENGTH_SHORT).show();
             touched = false;
         }
 

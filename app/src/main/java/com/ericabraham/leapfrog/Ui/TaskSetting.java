@@ -3,14 +3,14 @@ package com.ericabraham.leapfrog.Ui;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
-import android.widget.Toast;
-
 import com.ericabraham.leapfrog.R;
 import com.ericabraham.leapfrog.Utils.Utils;
 import com.ericabraham.leapfrog.Database.locationDatabase;
@@ -41,6 +41,25 @@ public class TaskSetting extends AppCompatActivity {
             }
         });
 
+
+        //        //Check for never expires box
+        CheckBox chk = (CheckBox) findViewById(R.id.ne);
+        chk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                // Check which checkbox was clicked
+                if (checked){
+                    date.setText("Never Expires");
+                    date.setEnabled(false);   // Do your coding
+                }
+                else{
+                    date.setEnabled(true);  // Do your coding
+                }
+            }
+        });
+
+
         date.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onDatePickerDialog();
@@ -56,7 +75,7 @@ public class TaskSetting extends AppCompatActivity {
             public void onClick(View view) {
 
                 //   finish();
-                saveNoStatus();
+                saveNoStatus(view);
             }
         });
 
@@ -86,21 +105,21 @@ public class TaskSetting extends AppCompatActivity {
 
                 // Validation
                 if (task.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Awww... Pleas give me a TITLE.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(view, "Please Enter Title", Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 if (date.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Awww... do i have a DATE?.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(view, "Please Enter Date", Snackbar.LENGTH_LONG).show();
                     return;
                 }
 
                 if (todo.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Awww... I can not remind NOTHING.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(view, "Please Enter Description", Snackbar.LENGTH_LONG).show();
                     return;
                 }
 
                 db.insertLocation(latitude, longitude, task, todo, radius, date, pname, address);
-                saveOkStatus();
+                saveOkStatus(view);
 
 
             }
@@ -144,15 +163,15 @@ public class TaskSetting extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void saveOkStatus() {
-        Toast.makeText(getApplicationContext(), "Ahhh... Saved!! ", Toast.LENGTH_SHORT).show();
+    private void saveOkStatus(View view) {
+        Snackbar.make(view, "Task Saved Successfully", Snackbar.LENGTH_LONG).show();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
-    private void saveNoStatus() {
-        Toast.makeText(getApplicationContext(), "Ahhh... NOT SAVED!! ", Toast.LENGTH_SHORT).show();
+    private void saveNoStatus(View view) {
+        Snackbar.make(view, "Oops, Something Went Wrong", Snackbar.LENGTH_LONG).show();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         this.finish();
