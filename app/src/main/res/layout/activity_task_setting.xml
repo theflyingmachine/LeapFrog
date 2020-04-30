@@ -27,7 +27,7 @@
                 android:layout_marginTop="12dp"
                 android:text="Address Title"
                 android:textColor="#000"
-                android:textSize="@dimen/abc_action_bar_content_inset_material"
+                android:textSize="23dp"
                 android:textStyle="bold" />
 
 
