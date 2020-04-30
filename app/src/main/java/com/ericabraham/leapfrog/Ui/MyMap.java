@@ -1,15 +1,20 @@
 package com.ericabraham.leapfrog.Ui;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.SnackbarContentLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +29,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -80,7 +86,6 @@ public class MyMap extends AppCompatActivity
         setContentView(R.layout.activity_mymap);
         textLat = findViewById(R.id.lat);
         textLong = findViewById(R.id.lon);
-
         // initialize GoogleMaps
         initGMaps();
 
@@ -231,7 +236,37 @@ public class MyMap extends AppCompatActivity
     // GoogleApiClient.ConnectionCallbacks connected
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        getLastKnownLocation();
+try {
+    getLastKnownLocation();
+}catch (NullPointerException e){
+    new AlertDialog.Builder(this)
+            .setTitle("Enable Location?")
+            .setMessage("Do you want to enable location service?")
+
+            // Specifying a listener allows you to take an action before dismissing the dialog.
+            // The dialog is automatically dismissed when a dialog button is clicked.
+            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // Continue with delete operation
+                    Toast.makeText(MyMap.this, "Enabling Location", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            })
+
+            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // Continue with delete operation
+                    Toast.makeText(MyMap.this, "Location Not Available", Toast.LENGTH_SHORT).show();
+
+                }
+            })
+
+            // A null listener allows the button to dismiss the dialog and take no further action.
+//            .setNegativeButton(android.R.string.no, null)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show();
+}
         recoverGeofenceMarker();
     }
 
@@ -263,9 +298,12 @@ public class MyMap extends AppCompatActivity
     }
 
     private void writeActualLocation(Location location) {
-        textLat.setText("Lat: " + location.getLatitude());
-        textLong.setText("Long: " + location.getLongitude());
-
+        try {
+            textLat.setText("Lat: " + location.getLatitude());
+            textLong.setText("Long: " + location.getLongitude());
+        }catch (NullPointerException e){
+            Toast.makeText(this, "Location Not Available", Toast.LENGTH_SHORT).show();
+        }
         //markerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
     }
 
