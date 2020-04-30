@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import com.ericabraham.leapfrog.R;
 import com.ericabraham.leapfrog.Utils.Utils;
 import com.ericabraham.leapfrog.Database.locationDatabase;
@@ -28,6 +29,13 @@ public class TaskSetting extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_setting);
 
+//       Initialize and set Location Title and Address
+        String placename = getIntent().getStringExtra("pname");
+        String address = getIntent().getStringExtra("address");
+        final TextView addressTitle = findViewById(R.id.addressTitle);
+        final TextView displayaddress = findViewById(R.id.address);
+        addressTitle.setText(placename);
+        displayaddress.setText(address);
         // initiate the date picker and a button
         date = findViewById(R.id.date);
         date.setKeyListener(null);
@@ -54,6 +62,7 @@ public class TaskSetting extends AppCompatActivity {
                     date.setEnabled(false);   // Do your coding
                 }
                 else{
+                    date.setText("");
                     date.setEnabled(true);  // Do your coding
                 }
             }
