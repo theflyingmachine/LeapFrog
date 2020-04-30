@@ -32,11 +32,31 @@
                 android:padding="15dp">
 
                 <TextView
-                    android:id="@+id/title_textview"
+                    android:id="@+id/addressTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Address Title"
+                    android:textColor="#000"
+                    android:textSize="@dimen/abc_action_bar_content_inset_material"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="12dp"
                     android:layout_marginTop="12dp"
+                    android:text="Address"
+                    android:textColor="#000"
+                    android:textSize="@dimen/abc_action_bar_content_inset_material" />
+
+                <TextView
+                    android:id="@+id/title_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:text="Title"
                     android:textColor="#000"
                     android:textSize="@dimen/abc_action_bar_content_inset_material"
@@ -46,7 +66,7 @@
                     android:id="@+id/title_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:contentDescription="Enter title for your reminder"
+                    android:hint="Enter Title For Your Reminder"
                     android:inputType="textAutoCorrect"
                     android:textSize="20sp" />
 
@@ -54,7 +74,6 @@
                     android:id="@+id/place_name_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="12dp"
                     android:layout_marginTop="12dp"
                     android:text="Radius (0-1 KM)"
                     android:textColor="#000"
@@ -75,7 +94,6 @@
                     android:id="@+id/datetitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="12dp"
                     android:layout_marginTop="12dp"
                     android:text="End Date"
                     android:textColor="#000"
@@ -101,8 +119,7 @@
                     android:id="@+id/place_address_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="12dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="20dp"
                     android:text="Task To Remind"
                     android:textColor="#000"
                     android:textSize="@dimen/abc_action_bar_content_inset_material"
@@ -115,6 +132,7 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:enabled="true"
+                    android:hint="What do you want me to remind?"
                     android:inputType="textAutoCorrect"
                     android:textSize="20sp"
                     android:visibility="visible" />

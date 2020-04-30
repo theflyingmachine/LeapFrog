@@ -75,7 +75,8 @@ public class ManageTask extends AppCompatActivity {
 
 
         final locationDatabase db = new locationDatabase(this);
-
+        final TextView address = findViewById(R.id.address);
+        final TextView addressTitle = findViewById(R.id.addressTitle);
         final TextView title = findViewById(R.id.title_edittext);
         final SeekBar radius = findViewById(R.id.seekBar);
         final TextView date = findViewById(R.id.date);
@@ -86,6 +87,8 @@ public class ManageTask extends AppCompatActivity {
         String[] taskData = db.displayTask(id);
         int raduisData = db.displayRadius(id);
 
+        addressTitle.setText(taskData[5]);
+        address.setText(taskData[4]);
         title.setText(taskData[0]);
         radius.setProgress(raduisData);
         date.setText(taskData[1]);

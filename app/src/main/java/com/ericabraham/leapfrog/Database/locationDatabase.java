@@ -269,6 +269,8 @@ public class locationDatabase extends SQLiteOpenHelper {
             myTask[1] = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_DATE));
             myTask[2] = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_TODO));
             myTask[3] = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_ID));
+            myTask[4] = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_ADDRESS));
+            myTask[5] = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_NAME));
         }
         cursor.close();
         return myTask;
