@@ -5,6 +5,10 @@
         android:id="@+id/list_view"
         android:title="List View" />
     <item
+        android:id="@+id/profile"
+        android:title="Profile"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/about"
         android:title="About"
         app:showAsAction="never" />

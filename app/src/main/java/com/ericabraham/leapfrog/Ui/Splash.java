@@ -3,15 +3,22 @@ package com.ericabraham.leapfrog.Ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
+
+import android.preference.PreferenceManager;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import com.ericabraham.leapfrog.Database.locationDatabase;
 import com.ericabraham.leapfrog.R;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.Date;
 
 public class Splash extends Activity {
@@ -42,16 +49,27 @@ public class Splash extends Activity {
         /*
       Duration of wait
      */
-        int SPLASH_DISPLAY_LENGTH = 500;
+        int SPLASH_DISPLAY_LENGTH = 2000;
         new Handler().postDelayed(new Runnable() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void run() {
                 cleanUp();
                 /* Create an Intent that will start the Menu-Activity. */
-                Intent mainIntent = new Intent(Splash.this, MainActivity.class);
-                startActivity(mainIntent);
-                finish();
+
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                String login = preferences.getString("Login", "");
+                Toast.makeText(Splash.this, login, Toast.LENGTH_SHORT).show();
+                if((login.equalsIgnoreCase("Anonymous")) ||  (login.equalsIgnoreCase("True"))){
+                    Intent mainIntent = new Intent(Splash.this, MainActivity.class);
+                    startActivity(mainIntent);
+                    finish();
+                }else {
+                    Intent mainIntent = new Intent(Splash.this, Login.class);
+                    startActivity(mainIntent);
+                    finish();
+                }
+
             }
         }, SPLASH_DISPLAY_LENGTH);
 

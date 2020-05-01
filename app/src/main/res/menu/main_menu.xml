@@ -9,6 +9,10 @@
         android:id="@+id/map_view"
         android:title="Map View" />
     <item
+        android:id="@+id/profile"
+        android:title="Profile"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/about"
         android:title="About"
         app:showAsAction="never" />

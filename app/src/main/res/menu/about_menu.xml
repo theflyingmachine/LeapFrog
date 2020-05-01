@@ -8,4 +8,8 @@
         android:id="@+id/map_view"
         android:title="Map View"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/profile"
+        android:title="Profile"
+        app:showAsAction="never" />
 </menu>

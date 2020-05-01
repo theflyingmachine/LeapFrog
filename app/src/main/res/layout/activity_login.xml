@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="100dp"
+    android:orientation="vertical"
+    android:paddingRight="20dp"
+    android:paddingLeft="20dp">
+
+
+    <ImageView
+        android:id="@+id/profileicon"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
+        app:srcCompat="@drawable/logo"/>
+
+
+    <TextView
+        android:id="@+id/welcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/baloo"
+        android:includeFontPadding="false"
+        android:paddingTop="20sp"
+        android:shadowColor="#0E0E0E"
+        android:text="Sign In"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="45sp" />
+
+    <TextView
+        android:id="@+id/loginname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:shadowColor="#0E0E0E"
+        android:text="Sign-In to LeapFrog with Google"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="18sp" />
+
+
+
+
+    <com.google.android.gms.common.SignInButton
+        android:layout_marginTop="20dp"
+        android:id="@+id/sign_in_button"
+        android:layout_width="200dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/or"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="bottom"
+        android:includeFontPadding="false"
+        android:shadowColor="#0E0E0E"
+        android:text=" OR "
+        android:textAlignment="center"
+        android:textColor="#0E0E0E"
+        android:textSize="14sp" />
+
+
+
+    <Button
+        android:id="@+id/sign_notin_button"
+        android:layout_width="200dp"
+        android:layout_gravity="center"
+        android:shadowColor="@color/white"
+        android:text="Skip Login"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints" />
+
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="200dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:shadowColor="@color/white"
+        android:text="Logout"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        tools:ignore="MissingConstraints" />
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
+        android:layout_marginTop="160dp">
+
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:gravity="bottom"
+        android:shadowColor="#0E0E0E"
+        android:text="Terms of use  |  Privacy Policy"
+        android:textAlignment="center"
+        android:textColor="#0000FF"
+        android:textSize="14sp" />
+
+
+</LinearLayout>
+
+
+</ScrollView>

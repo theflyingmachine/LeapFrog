@@ -1,7 +1,7 @@
 package com.ericabraham.leapfrog;
 
 import android.app.Application;
-import android.support.multidex.MultiDex;
+import androidx.multidex.MultiDex;
 
 public class MyLeapFrogApplication extends Application {
 

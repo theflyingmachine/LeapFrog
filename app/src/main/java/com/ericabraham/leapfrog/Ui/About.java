@@ -1,10 +1,13 @@
 package com.ericabraham.leapfrog.Ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -56,6 +59,11 @@ public class About extends AppCompatActivity implements OnTouchListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.about_menu, menu);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String name = preferences.getString("Login", "");
+        if(name.equalsIgnoreCase("Anonymous")) {
+            menu.findItem(R.id.profile).setTitle("Sign in");
+        }
         return true;
     }
 
@@ -65,6 +73,12 @@ public class About extends AppCompatActivity implements OnTouchListener {
             case R.id.list_view: {
                 Intent intent = new Intent(this, MainActivity.class);
                 this.startActivity(intent);
+                return true;
+            }
+
+            case R.id.profile: {
+                Intent intent = new Intent(this, Login.class);
+                startActivity(intent);
                 return true;
             }
 

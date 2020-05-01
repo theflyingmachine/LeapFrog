@@ -3,61 +3,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ericabraham.leapfrog">
 
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-  <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
-  <application
-      android:allowBackup="true"
-      android:fullBackupContent="true"
-      android:icon="@mipmap/ic_launcher"
-      android:label="@string/app_name"
-      android:roundIcon="@mipmap/ic_launcher"
-      android:supportsRtl="true"
-      android:theme="@style/AppTheme"
-      android:name=".MyLeapFrogApplication"
-      android:appComponentFactory = "androidx"
-      tools:replace="android:appComponentFactory">
-    <service android:name=".Ui.GeofenceTrasitionService"/>
-
-    <receiver android:name=".Ui.MainActivity$NotificationMgr"/>
-    <receiver android:name=".Ui.MainActivity$SkipTask"/>
-    <receiver android:name=".Ui.MainActivity$MarkDone"/>
-
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyDxQ6Jxth20p4RRY5WCZEjuyQ3i8UVDk3g"/>
-    <meta-data
-        android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version"/>
-
-    <activity
-        android:name=".Ui.Splash"
+    <application
+        android:name=".MyLeapFrogApplication"
+        android:allowBackup="true"
+        android:appComponentFactory="androidx"
+        android:fullBackupContent="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:screenOrientation="portrait"
-        android:theme="@style/AppTheme.NoActionBar">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN"/>
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:replace="android:appComponentFactory">
 
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
-    </activity>
-    <activity
-        android:name=".Ui.TaskSetting"
-        android:screenOrientation="portrait"/>
-    <activity
-        android:name=".Ui.ManageTask"
-        android:screenOrientation="portrait"/>
-    <activity
-        android:name=".Ui.MainActivity"
-        android:screenOrientation="portrait"/>
-    <activity
-        android:name=".Ui.About"
-        android:screenOrientation="portrait"/>
-    <activity
-        android:name=".Ui.MyMap"
-        android:screenOrientation="portrait"/>
+        <service android:name=".Ui.GeofenceTrasitionService" />
 
-  </application>
+        <receiver android:name=".Ui.MainActivity$NotificationMgr" />
+        <receiver android:name=".Ui.MainActivity$SkipTask" />
+        <receiver android:name=".Ui.MainActivity$MarkDone" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDxQ6Jxth20p4RRY5WCZEjuyQ3i8UVDk3g" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".Ui.Splash"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Ui.TaskSetting"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Ui.ManageTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Ui.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Ui.About"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Ui.MyMap"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Ui.Login"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait" />
+    </application>
 
 </manifest>
