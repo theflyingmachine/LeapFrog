@@ -59,7 +59,7 @@ public class Splash extends Activity {
 
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 String login = preferences.getString("Login", "");
-                Toast.makeText(Splash.this, login, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Splash.this, login, Toast.LENGTH_SHORT).show();
                 if((login.equalsIgnoreCase("Anonymous")) ||  (login.equalsIgnoreCase("True"))){
                     Intent mainIntent = new Intent(Splash.this, MainActivity.class);
                     startActivity(mainIntent);

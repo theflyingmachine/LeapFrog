@@ -2,9 +2,17 @@ package com.ericabraham.leapfrog.Ui;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -17,19 +25,29 @@ import android.widget.Toast;
 import com.ericabraham.leapfrog.Database.locationDatabase;
 import com.ericabraham.leapfrog.R;
 import com.ericabraham.leapfrog.Utils.Utils;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ManageTask extends AppCompatActivity {
 
     private EditText date;
     private DatePickerDialog datePickerDialog;
     private int idno;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_task);
-
+        mAuth = FirebaseAuth.getInstance();
         // initiate the date picker and a button
         date = findViewById(R.id.date);
         date.setKeyListener(null);
@@ -44,11 +62,10 @@ public class ManageTask extends AppCompatActivity {
             public void onClick(View v) {
                 boolean checked = ((CheckBox) v).isChecked();
                 // Check which checkbox was clicked
-                if (checked){
+                if (checked) {
                     date.setText("Never Expires");
                     date.setEnabled(false);   // Do your coding
-                }
-                else{
+                } else {
                     date.setEnabled(true);  // Do your coding
                     date.setText("");
                 }
@@ -56,7 +73,8 @@ public class ManageTask extends AppCompatActivity {
         });
 
         date.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override public void onFocusChange(View v, boolean hasFocus) {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
                 // calender class's instance and get current date , month and year from calender
                 if (hasFocus) {
                     onDatePickerDialog();
@@ -65,7 +83,8 @@ public class ManageTask extends AppCompatActivity {
         });
 
         date.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 onDatePickerDialog();
             }
         });
@@ -112,7 +131,28 @@ public class ManageTask extends AppCompatActivity {
             public void onClick(View view) {
                 db.delTask(idno);
 //                Snackbar.make(view, "Your Task is Deleted", Snackbar.LENGTH_LONG).show();
-                Toast.makeText(getApplicationContext(),"Task Deleted" ,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Task Deleted", Toast.LENGTH_SHORT).show();
+
+                // Add a new document with a generated ID
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user != null) {
+                    DocumentReference documentReference = db.collection(user.getEmail()).document(String.valueOf(idno));
+                    db.collection(user.getEmail()).document(String.valueOf(idno))
+                            .delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+//                                    Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+//                                    Log.w(TAG, "Error deleting document", e);
+                                }
+                            });
+                }
                 returnToMain();
             }
         });
@@ -135,7 +175,7 @@ public class ManageTask extends AppCompatActivity {
                     return;
                 }
                 if (udate.equals("")) {
-                   Snackbar.make(view, "Please Enter Date", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, "Please Enter Date", Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 if (utodo.equals("")) {
@@ -145,13 +185,39 @@ public class ManageTask extends AppCompatActivity {
 
 
                 db.updateTask(idno, utask, utodo, uradius, udate);
-                Toast.makeText(getApplicationContext(),"Task Updated" ,Toast.LENGTH_SHORT).show();
+
+
+// Access a Cloud Firestore instance from your Activity
+// Create a new user with a first, middle, and last name
+                Map<String, Object> taskdata = new HashMap<>();
+                taskdata.put("task", utask);
+                taskdata.put("todo", utodo);
+                taskdata.put("radius", uradius);
+                taskdata.put("date", udate);
+                taskdata.put("localId", idno);
+
+// Add a new document with a generated ID
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user != null) {
+                    DocumentReference documentReference = db.collection(user.getEmail()).document(String.valueOf(id));
+                    documentReference.update(taskdata).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+//                            Toast.makeText(ManageTask.this, "Saved Firebase", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+//                    Toast.makeText(ManageTask.this, "Not Logged in", Toast.LENGTH_SHORT).show();
+                }
+
+                Toast.makeText(getApplicationContext(), "Task Updated", Toast.LENGTH_SHORT).show();
                 returnToMain();
             }
         });
     }
 
-    private void onDatePickerDialog(){
+    private void onDatePickerDialog() {
         Utils.hideKeyboard(this);
         final Calendar c = Calendar.getInstance();
         int mYear = c.get(Calendar.YEAR); // current year
@@ -160,21 +226,21 @@ public class ManageTask extends AppCompatActivity {
 
         // date picker dialog
         datePickerDialog = new DatePickerDialog(ManageTask.this,
-            new DatePickerDialog.OnDateSetListener() {
+                new DatePickerDialog.OnDateSetListener() {
 
-                @Override
-                public void onDateSet(DatePicker view, int year,
-                    int monthOfYear, int dayOfMonth) {
-                    // set day of month , month and year value in the edit text
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        // set day of month , month and year value in the edit text
 
-                    final String[] MONTHS = {
-                        "January", "February", "March", "April", "May", "June", "July", "August",
-                        "September", "October", "November", "December"
-                    };
-                    String mon = MONTHS[monthOfYear];
-                    date.setText(mon + " " + dayOfMonth + ", " + year);
-                }
-            }, mYear, mMonth, mDay);
+                        final String[] MONTHS = {
+                                "January", "February", "March", "April", "May", "June", "July", "August",
+                                "September", "October", "November", "December"
+                        };
+                        String mon = MONTHS[monthOfYear];
+                        date.setText(mon + " " + dayOfMonth + ", " + year);
+                    }
+                }, mYear, mMonth, mDay);
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
     }

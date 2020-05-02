@@ -52,7 +52,7 @@ public class locationDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertLocation(String lat, String longi, String task, String todo, Integer radius, String date, String pname, String address) {
+    public long insertLocation(String lat, String longi, String task, String todo, Integer radius, String date, String pname, String address) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -68,19 +68,19 @@ public class locationDatabase extends SQLiteOpenHelper {
 
 
         // Inserting Row
-        db.insert(TABLE_NAME, null, values);
+        long id = db.insert(TABLE_NAME, null, values);
         //2nd argument is String containing nullColumnHack
-        // db.close(); // Closing database connection
+        db.close(); // Closing database connection
+        return id;
     }
 
 
-
-//to return the timestamp for checking SkipList
+    //to return the timestamp for checking SkipList
     public String[] displaySkipList() {
         String selectQuery = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        String timeStamp[]=new String[rowCount];
+        String timeStamp[] = new String[rowCount];
         int i = 0;
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -243,7 +243,6 @@ public class locationDatabase extends SQLiteOpenHelper {
     }
 
 
-
     //get radius
     public int displayRadius(int i) {
         String selectQuery = "SELECT " + COLUMN_NAME_RADIUS + " FROM " + TABLE_NAME + " WHERE " + COLUMN_NAME_ID + " = " + i;
@@ -303,8 +302,6 @@ public class locationDatabase extends SQLiteOpenHelper {
         long numRows = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
         return rowCount = (int) numRows;
     }
-
-
 
 
     //get task name by Id

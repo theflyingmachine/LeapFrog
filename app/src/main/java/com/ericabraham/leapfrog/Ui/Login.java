@@ -51,13 +51,14 @@ public class Login extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private final static int RC_SIGN_IN = 1;
     private FirebaseAuth mAuth;
+    private TextView policy;
 
     @Override
     protected void onStart() {
 
         super.onStart();
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
+            FirebaseUser user = mAuth.getCurrentUser();
+            if (user != null) {
 //            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 //            startActivity(intent);
 
@@ -125,6 +126,17 @@ public class Login extends AppCompatActivity {
                 signIn();
             }
         });
+
+        policy = findViewById(R.id.policy);
+        policy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://leapfrog.cyberboy.in/policy.html"));
+                startActivity(browserIntent);
+
+            }
+        });
+
 
         Button sign_notin_button = findViewById(R.id.sign_notin_button);
         sign_notin_button.setOnClickListener(new View.OnClickListener() {
@@ -226,6 +238,8 @@ public class Login extends AppCompatActivity {
                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("Login", "True");
+                            String uuid = user.getUid();
+                            editor.putString("uuid", uuid);
                             editor.apply();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
