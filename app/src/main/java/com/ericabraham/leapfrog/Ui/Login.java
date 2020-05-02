@@ -10,6 +10,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -275,7 +279,16 @@ public class Login extends AppCompatActivity {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
-            return mIcon11;
+            int bordersize = 5;
+            Bitmap circleBitmap = Bitmap.createBitmap(mIcon11.getWidth(), mIcon11.getHeight(), Bitmap.Config.ARGB_8888);
+
+            BitmapShader shader = new BitmapShader (mIcon11,  Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+            Paint paint = new Paint();
+            paint.setShader(shader);
+            paint.setAntiAlias(true);
+            Canvas c = new Canvas(circleBitmap);
+            c.drawCircle(mIcon11.getWidth()/2, mIcon11.getHeight()/2, (mIcon11.getWidth()/2 )-4, paint);
+            return circleBitmap;
         }
 
         protected void onPostExecute(Bitmap result) {

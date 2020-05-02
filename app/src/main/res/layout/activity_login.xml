@@ -23,11 +23,11 @@
 
         <ImageView
             android:id="@+id/profileicon"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/profileimg"
-            app:srcCompat="@drawable/logo"/>
+            app:srcCompat="@drawable/logo"
+            android:background="@drawable/circle"/>
 
 
         <TextView
